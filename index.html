@@ -520,8 +520,6 @@ const MONTHLY_LIMIT = 500000;
 const monthlyUsed   = 186000;
 const monthlyPct    = monthlyUsed / MONTHLY_LIMIT;
 const monthlyH      = healthClass(monthlyPct);
-document.getElementById('monthly-fill').style.width = Math.min(monthlyPct * 100, 100).toFixed(1) + '%';
-document.getElementById('monthly-fill').className = `health-fill fill-${monthlyH}`;
 document.getElementById('monthly-badge').className = `health-badge badge-${monthlyH}`;
 document.getElementById('monthly-badge').innerHTML = `<span class="badge-dot"></span>${badgeText(monthlyPct, 18)}`;
 
