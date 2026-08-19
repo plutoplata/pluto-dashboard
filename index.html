@@ -175,25 +175,46 @@ body {
 .badge-crit { background: var(--red-dim);   color: oklch(42% 0.18 24); }
 .badge-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-/* Today sparkline card */
-.spark-card {
+/* Today linear gauge card */
+.gauge-card {
   background: white;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 12px;
 }
-.spark-top {
-  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px;
+.gauge-top {
+  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px;
 }
-.spark-label { font-size: 10px; color: var(--text-muted); }
-.spark-badge {
+.gauge-label { font-size: 10px; color: var(--text-muted); }
+.gauge-badge {
   font-size: 9.5px; font-weight: 500; padding: 1px 7px; border-radius: 99px;
 }
-.spark-val { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
-.spark-days {
-  display: flex; justify-content: space-between; margin-top: 5px;
-  font-size: 8.5px; color: var(--text-muted);
+/* Linear gauge track */
+.gauge-track {
+  width: 100%; height: 8px;
+  background: var(--surface-2); border-radius: 99px;
+  position: relative; overflow: visible;
 }
+.gauge-fill {
+  height: 100%; border-radius: 99px;
+  transition: width 0.4s, background 0.3s;
+  max-width: 100%;
+  position: relative;
+}
+/* Limit marker */
+.gauge-limit-line {
+  position: absolute; top: -3px; bottom: -3px; width: 2px;
+  background: var(--border); border-radius: 1px;
+  right: 0;
+}
+.gauge-numbers {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 7px;
+}
+.gauge-used  { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+.gauge-limit { font-size: 10px; color: var(--text-muted); }
+.gauge-over  { font-size: 9.5px; font-weight: 600; padding: 1px 7px; border-radius: 99px;
+               background: var(--red-dim); color: var(--red); margin-top: 5px; display: inline-block; }
 
 /* ─── Main ──────────────────────────────────────── */
 .main {
@@ -370,7 +391,7 @@ body {
           <div class="token-meta">
             <div class="token-card-label">This Month</div>
             <div class="token-card-val">186k</div>
-            <div class="token-card-sub">of 500k limit</div>
+            <div class="token-card-sub">of 500k limit · <strong id="monthly-cost" style="color:var(--text)">~$0.89 est.</strong></div>
           </div>
         </div>
         <div class="health-bar">
@@ -381,17 +402,21 @@ body {
         </div>
       </div>
 
-      <!-- Today sparkline -->
-      <div class="spark-card">
-        <div class="spark-top">
-          <span class="spark-label">Today</span>
-          <span class="spark-badge badge-ok" id="daily-badge">
-            ↑ 16%
-          </span>
+      <!-- Today linear gauge -->
+      <div class="gauge-card">
+        <div class="gauge-top">
+          <span class="gauge-label">Today</span>
+          <span class="gauge-badge" id="daily-badge">↑ 16%</span>
         </div>
-        <div class="spark-val">24.7k</div>
-        <svg id="spark-svg" width="100%" height="38" viewBox="0 0 192 38" preserveAspectRatio="none" style="display:block"></svg>
-        <div class="spark-days" id="spark-days"></div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-fill" style="width:49%">
+            <div class="gauge-limit-line"></div>
+          </div>
+        </div>
+        <div class="gauge-numbers">
+          <span class="gauge-used" id="gauge-used">24.7k</span>
+          <span class="gauge-limit" id="gauge-limit-label">of 50k daily</span>
+        </div>
       </div>
     </div>
 
@@ -476,8 +501,8 @@ body {
 
 <script>
 // ─── Health logic ─────────────────────────────────────────
-// Thresholds: warn at 65%, crit at 85%
 function healthClass(pct) {
+  if (pct >= 1.0)  return 'crit'; // over limit
   if (pct >= 0.85) return 'crit';
   if (pct >= 0.65) return 'warn';
   return 'ok';
@@ -488,24 +513,47 @@ function badgeText(pct, daysLeft) {
   return `✓ Healthy — ${daysLeft}d left`;
 }
 
-// Monthly: 186k / 500k = 37%
-const monthlyPct  = 186000 / 500000;
-const monthlyH    = healthClass(monthlyPct);
-const monthlyFill = document.getElementById('monthly-fill');
-const monthlyBadge= document.getElementById('monthly-badge');
-monthlyFill.style.width = (monthlyPct * 100).toFixed(1) + '%';
-monthlyFill.className = `health-fill fill-${monthlyH}`;
-monthlyBadge.className = `health-badge badge-${monthlyH}`;
-monthlyBadge.innerHTML = `<span class="badge-dot"></span>${badgeText(monthlyPct, 18)}`;
+// Monthly
+const MONTHLY_LIMIT = 500000;
+const monthlyUsed   = 186000;
+const monthlyPct    = monthlyUsed / MONTHLY_LIMIT;
+const monthlyH      = healthClass(monthlyPct);
+document.getElementById('monthly-fill').style.width = Math.min(monthlyPct * 100, 100).toFixed(1) + '%';
+document.getElementById('monthly-fill').className = `health-fill fill-${monthlyH}`;
+document.getElementById('monthly-badge').className = `health-badge badge-${monthlyH}`;
+document.getElementById('monthly-badge').innerHTML = `<span class="badge-dot"></span>${badgeText(monthlyPct, 18)}`;
 
-// Daily: 24.7k / 50k daily budget = 49% — adjust DAILY_LIMIT to your actual budget
+// Estimated cost (Sonnet 4.6: $3/MTok input, $15/MTok output, $0.30/MTok cache read, ~96% cache)
+// Rough split: 70% input, 30% output; 96% of input is cached
+const estCost = (
+  monthlyUsed * 0.70 * 0.96 * 0.30 / 1e6 +   // cached input
+  monthlyUsed * 0.70 * 0.04 * 3.00 / 1e6 +   // uncached input
+  monthlyUsed * 0.30 * 15.0 / 1e6            // output
+);
+document.getElementById('monthly-cost').textContent = `~$${estCost.toFixed(2)} est.`;
+
+// Daily linear gauge
 const DAILY_LIMIT = 50000;
 const dailyUsed   = 24700;
 const dailyPct    = dailyUsed / DAILY_LIMIT;
 const dailyH      = healthClass(dailyPct);
-const dailyBadge  = document.getElementById('daily-badge');
-dailyBadge.className = `spark-badge badge-${dailyH}`;
-dailyBadge.textContent = dailyH === 'ok' ? '↑ 16%' : dailyH === 'warn' ? '↗ Watch' : '⚠ High';
+const fillColors  = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
+
+const gaugeFill = document.getElementById('gauge-fill');
+gaugeFill.style.width  = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
+gaugeFill.style.background = fillColors[dailyH];
+
+const dailyBadge = document.getElementById('daily-badge');
+dailyBadge.className = `gauge-badge badge-${dailyH}`;
+dailyBadge.textContent = dailyPct >= 1 ? '⚠ Over limit' : dailyPct >= 0.85 ? '⚠ High' : dailyPct >= 0.65 ? '↗ Watch' : '↑ 16%';
+
+if (dailyPct >= 1) {
+  const nums = document.getElementById('gauge-used').parentElement;
+  const over = document.createElement('div');
+  over.className = 'gauge-over';
+  over.textContent = `${((dailyPct - 1) * DAILY_LIMIT / 1000).toFixed(1)}k over limit`;
+  nums.parentElement.appendChild(over);
+}
 
 // ─── Donut ring ───────────────────────────────────────────
 (function() {
@@ -525,40 +573,6 @@ dailyBadge.textContent = dailyH === 'ok' ? '↑ 16%' : dailyH === 'warn' ? '↗ 
   `;
   document.getElementById('donut-pct-text').textContent = Math.round(monthlyPct * 100) + '%';
   document.getElementById('donut-pct-text').style.color = stroke;
-})();
-
-// ─── Sparkline ────────────────────────────────────────────
-(function() {
-  const data = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
-  const days = ['M','T','W','T','F','S','T'];
-  const W = 192, H = 38, pad = 4;
-  const min = Math.min(...data), max = Math.max(...data), range = max - min;
-  const colors = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
-  const stroke = colors[dailyH];
-
-  const pts = data.map((v, i) => [
-    pad + (i / (data.length - 1)) * (W - pad * 2),
-    H - pad - ((v - min) / range) * (H - pad * 2)
-  ]);
-
-  const poly = pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const area = `${pts[0][0].toFixed(1)},${H} ` + poly + ` ${pts[pts.length-1][0].toFixed(1)},${H}`;
-  const [lx, ly] = pts[pts.length - 1];
-
-  document.getElementById('spark-svg').innerHTML = `
-    <defs>
-      <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${stroke}" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="${stroke}" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <polygon points="${area}" fill="url(#sg)"/>
-    <polyline points="${poly}" fill="none" stroke="${stroke}" stroke-width="1.6"
-      stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.5" fill="${stroke}"/>
-  `;
-
-  document.getElementById('spark-days').innerHTML = days.map(d => `<span>${d}</span>`).join('');
 })();
 </script>
 </body>
