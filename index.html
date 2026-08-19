@@ -22,12 +22,10 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
   --accent-mid:  oklch(62% 0.10 154);
   --accent-dim:  oklch(90% 0.042 154);
   --accent-glow: oklch(43% 0.11 154 / 0.08);
-  --warn:        oklch(68% 0.16 50);
-  --warn-dim:    oklch(93% 0.05 80);
   --font:        'Outfit', sans-serif;
   --r:           8px;
-  --r-lg:        14px;
-  --sidebar-w:   210px;
+  --r-lg:        12px;
+  --sidebar-w:   224px;
 }
 
 html, body { height: 100%; }
@@ -55,26 +53,26 @@ body {
   flex-direction: column;
   overflow-y: auto;
 }
+
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 18px 16px 16px;
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 .brand-icon {
   width: 30px; height: 30px;
   background: var(--accent);
   border-radius: var(--r);
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700;
-  color: white;
-  flex-shrink: 0;
+  font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
 }
 .brand-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .brand-sub  { font-size: 10.5px; color: var(--text-muted); }
 
-.nav-section { padding: 12px 10px 6px; }
+.nav-section { padding: 12px 10px 4px; flex-shrink: 0; }
 .nav-label {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-muted); padding: 2px 6px 8px;
@@ -91,23 +89,90 @@ body {
 }
 .nav-item:hover  { background: var(--surface-2); color: var(--text); }
 .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
-.nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-icon { width: 15px; height: 15px; flex-shrink: 0; }
 .proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
+/* ─── Token section in sidebar ───────────────────── */
+.token-section {
+  padding: 14px 14px 8px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.token-section-label {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); margin-bottom: 10px; display: block;
+}
+
+/* Donut — compact */
+.donut-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.donut-row {
+  display: flex; align-items: center; gap: 12px;
+}
+.donut-info { flex: 1; min-width: 0; }
+.donut-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+.donut-card-val   { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.donut-card-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+.donut-pct-bar {
+  width: 100%; height: 4px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.donut-pct-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+/* Mini sparkline card */
+.spark-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+}
+.spark-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.spark-label { font-size: 10px; color: var(--text-muted); }
+.spark-val   { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; }
+.spark-delta {
+  font-size: 10px; font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 6px; border-radius: 99px;
+}
+.spark-days {
+  display: flex; justify-content: space-between;
+  margin-top: 4px;
+  font-size: 8.5px; color: var(--text-muted);
+}
+
+/* ─── Sidebar footer ─────────────────────────────── */
 .sidebar-footer {
   margin-top: auto;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }
 .user-row { display: flex; align-items: center; gap: 10px; }
 .avatar {
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 50%;
   background: var(--accent); color: white;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 600; flex-shrink: 0;
 }
-.user-name { font-size: 13px; font-weight: 500; }
-.user-role { font-size: 10.5px; color: var(--text-muted); }
+.user-name { font-size: 12.5px; font-weight: 500; }
+.user-role { font-size: 10px; color: var(--text-muted); }
 
 /* ─── Main ──────────────────────────────────────── */
 .main {
@@ -115,11 +180,9 @@ body {
   grid-template-rows: auto 1fr;
   overflow: hidden;
 }
-
-/* ─── Header ────────────────────────────────────── */
 .header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 24px;
+  padding: 14px 26px;
   border-bottom: 1px solid var(--border);
 }
 .header-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
@@ -131,34 +194,21 @@ body {
   border-radius: var(--r);
   font-size: 12.5px; font-weight: 500;
   border: 1px solid var(--border);
-  background: white;
-  color: var(--text-muted);
+  background: white; color: var(--text-muted);
   transition: all 0.12s;
 }
 .btn:hover { color: var(--text); border-color: var(--accent); }
-.btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
+.btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
 .btn-primary:hover { filter: brightness(1.08); }
-
-/* ─── Content area ──────────────────────────────── */
-.content {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  overflow: hidden;
-}
 
 /* ─── Kanban ────────────────────────────────────── */
 .kanban-pane {
   overflow-y: auto;
-  padding: 20px 24px;
-  border-right: 1px solid var(--border);
+  padding: 22px 26px;
 }
 .section-hd {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .section-title {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
@@ -167,7 +217,7 @@ body {
 .kanban {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 14px;
   align-items: start;
 }
 .kanban-col-hd {
@@ -187,27 +237,23 @@ body {
   background: white;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  padding: 10px 12px;
-  margin-bottom: 8px;
+  padding: 11px 13px;
+  margin-bottom: 9px;
   cursor: pointer;
   transition: border-color 0.12s, box-shadow 0.12s, transform 0.1s;
 }
 .task-card:hover {
   border-color: var(--accent-mid);
-  box-shadow: 0 3px 12px var(--accent-glow);
+  box-shadow: 0 3px 14px var(--accent-glow);
   transform: translateY(-1px);
 }
 .task-top { display: flex; align-items: flex-start; gap: 8px; }
-.priority-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
-}
+.priority-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 .p-high { background: oklch(62% 0.21 24); }
 .p-med  { background: oklch(75% 0.16 74); }
 .p-low  { background: var(--accent-mid); }
 .task-title { font-size: 12.5px; font-weight: 400; line-height: 1.35; flex: 1; }
-.task-footer {
-  display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
-}
+.task-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
 .task-tag {
   font-size: 10px; color: var(--text-muted);
   background: var(--surface); border: 1px solid var(--border);
@@ -219,99 +265,15 @@ body {
   color: var(--accent); font-size: 9.5px; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
 }
-.task-active  { border-color: var(--accent) !important; border-left-width: 3px; }
-.task-done    { opacity: 0.42; }
+.task-active { border-color: var(--accent) !important; border-left-width: 3px; }
+.task-done   { opacity: 0.42; }
 .task-done .task-title { text-decoration: line-through; }
-
-/* ─── Right Panel ───────────────────────────────── */
-.right-panel {
-  overflow-y: auto;
-  padding: 20px 20px;
-  background: var(--surface);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ─── Token Charts ──────────────────────────────── */
-.panel-title {
-  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em;
-  color: var(--text-muted); font-weight: 500; margin-bottom: 12px;
-}
-
-/* Donut Chart */
-.donut-wrap {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 16px;
-}
-.donut-chart-area {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 12px;
-}
-.donut-svg-wrap { position: relative; flex-shrink: 0; }
-.donut-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: none;
-}
-.donut-val  { font-size: 16px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); }
-.donut-sub  { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
-.donut-meta {}
-.donut-label { font-size: 12.5px; font-weight: 500; margin-bottom: 3px; }
-.donut-caption { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
-.donut-legend { display: flex; flex-direction: column; gap: 6px; }
-.legend-row { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-muted); }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-/* Line Chart */
-.line-wrap {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 16px;
-}
-.line-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.line-val { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
-.line-delta {
-  font-size: 10.5px; color: var(--text-muted);
-  background: var(--accent-dim); color: var(--accent);
-  padding: 2px 7px; border-radius: 99px;
-}
-.line-chart { width: 100%; }
-.line-days {
-  display: flex; justify-content: space-between;
-  margin-top: 6px;
-  font-size: 9px; color: var(--text-muted);
-}
-
-/* ─── Projects panel ────────────────────────────── */
-.projects-list { display: flex; flex-direction: column; gap: 8px; }
-.project-row {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 10px 12px;
-  display: flex; align-items: center; gap: 10px;
-}
-.project-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.project-name { font-size: 12.5px; font-weight: 500; flex: 1; }
-.project-status {
-  font-size: 10px; padding: 1px 8px; border-radius: 99px;
-  font-weight: 500;
-}
-.status-active   { background: var(--accent-dim); color: var(--accent); }
-.status-done     { background: var(--surface-2); color: var(--text-muted); }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- Sidebar -->
+  <!-- ─── Sidebar ─────────────────────────────────── -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-icon">P</div>
@@ -354,7 +316,7 @@ body {
       </div>
     </div>
 
-    <div class="nav-section" style="margin-top:4px">
+    <div class="nav-section" style="margin-top:2px">
       <div class="nav-label">Projects</div>
       <div class="nav-item">
         <span class="proj-dot" style="background:oklch(62% 0.21 24)"></span>Portfolio Rebuild
@@ -364,6 +326,37 @@ body {
       </div>
       <div class="nav-item" style="opacity:0.5">
         <span class="proj-dot" style="background:var(--accent-mid)"></span>Agent Setup
+      </div>
+    </div>
+
+    <!-- Token Stats -->
+    <div class="token-section">
+      <span class="token-section-label">Token Usage</span>
+
+      <!-- Monthly donut-style progress -->
+      <div class="donut-card">
+        <div class="donut-row">
+          <svg width="44" height="44" viewBox="0 0 44 44" id="donut-svg" style="flex-shrink:0"></svg>
+          <div class="donut-info">
+            <div class="donut-card-label">This Month</div>
+            <div class="donut-card-val">186k</div>
+            <div class="donut-card-sub">37% of 500k limit</div>
+          </div>
+        </div>
+        <div class="donut-pct-bar">
+          <div class="donut-pct-fill" style="width:37%"></div>
+        </div>
+      </div>
+
+      <!-- Today sparkline -->
+      <div class="spark-card">
+        <div class="spark-header">
+          <span class="spark-label">Today</span>
+          <span class="spark-delta">↑ 16%</span>
+        </div>
+        <div class="spark-val">24.7k</div>
+        <svg id="spark-svg" width="100%" height="40" viewBox="0 0 192 40" preserveAspectRatio="none" style="margin-top:8px;display:block"></svg>
+        <div class="spark-days" id="spark-days"></div>
       </div>
     </div>
 
@@ -378,7 +371,7 @@ body {
     </div>
   </aside>
 
-  <!-- Main -->
+  <!-- ─── Main ─────────────────────────────────────── -->
   <main class="main">
     <header class="header">
       <div>
@@ -391,144 +384,62 @@ body {
       </div>
     </header>
 
-    <div class="content">
-
-      <!-- Kanban -->
-      <div class="kanban-pane">
-        <div class="section-hd">
-          <span class="section-title">Task Board</span>
-          <button class="btn" style="font-size:11px;padding:4px 10px">Filter ▾</button>
-        </div>
-        <div class="kanban">
-
-          <div class="kanban-col">
-            <div class="kanban-col-hd">
-              <span class="col-name">Backlog</span>
-              <span class="col-count">3</span>
-            </div>
-            <div class="task-card">
-              <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Finalize case study structure</span></div>
-              <div class="task-footer"><span class="task-tag">portfolio</span><span class="task-assignee">P</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Design system audit</span></div>
-              <div class="task-footer"><span class="task-tag">design</span><span class="task-assignee">P</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Write project briefs</span></div>
-              <div class="task-footer"><span class="task-tag">writing</span><span class="task-assignee">P</span></div>
-            </div>
-          </div>
-
-          <div class="kanban-col">
-            <div class="kanban-col-hd">
-              <span class="col-name">In Progress</span>
-              <span class="col-count">2</span>
-            </div>
-            <div class="task-card task-active">
-              <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Dashboard concept mockups</span></div>
-              <div class="task-footer"><span class="task-tag">pluto</span><span class="task-assignee">P</span></div>
-            </div>
-            <div class="task-card">
-              <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Connect Figma API</span></div>
-              <div class="task-footer"><span class="task-tag">dev</span><span class="task-assignee">P</span></div>
-            </div>
-          </div>
-
-          <div class="kanban-col">
-            <div class="kanban-col-hd">
-              <span class="col-name">Review</span>
-              <span class="col-count">1</span>
-            </div>
-            <div class="task-card">
-              <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Agent architecture setup</span></div>
-              <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
-            </div>
-          </div>
-
-          <div class="kanban-col">
-            <div class="kanban-col-hd">
-              <span class="col-name">Done</span>
-              <span class="col-count">3</span>
-            </div>
-            <div class="task-card task-done">
-              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Bootstrap OpenClaw</span></div>
-              <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
-            </div>
-            <div class="task-card task-done">
-              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Configure integrations</span></div>
-              <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
-            </div>
-            <div class="task-card task-done">
-              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Multi-agent isolation</span></div>
-              <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
-            </div>
-          </div>
-
-        </div>
+    <div class="kanban-pane">
+      <div class="section-hd">
+        <span class="section-title">Task Board</span>
+        <button class="btn" style="font-size:11px;padding:4px 10px">Filter ▾</button>
       </div>
+      <div class="kanban">
 
-      <!-- Right Panel -->
-      <div class="right-panel">
-
-        <!-- Monthly Donut -->
-        <div>
-          <div class="panel-title">Tokens This Month</div>
-          <div class="donut-wrap">
-            <div class="donut-chart-area">
-              <div class="donut-svg-wrap">
-                <svg width="90" height="90" viewBox="0 0 90 90" id="donut-svg">
-                  <!-- drawn by JS -->
-                </svg>
-                <div class="donut-center">
-                  <div class="donut-val">186k</div>
-                  <div class="donut-sub">of 500k</div>
-                </div>
-              </div>
-              <div class="donut-meta">
-                <div class="donut-label">37% used</div>
-                <div class="donut-caption" style="color:var(--text-muted);font-size:10.5px;margin-top:3px">18 days remaining<br>in billing period</div>
-              </div>
-            </div>
-            <div class="donut-legend">
-              <div class="legend-row"><span class="legend-dot" style="background:var(--accent)"></span>Used — 186k</div>
-              <div class="legend-row"><span class="legend-dot" style="background:var(--border)"></span>Remaining — 314k</div>
-            </div>
+        <div class="kanban-col">
+          <div class="kanban-col-hd"><span class="col-name">Backlog</span><span class="col-count">3</span></div>
+          <div class="task-card">
+            <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Finalize case study structure</span></div>
+            <div class="task-footer"><span class="task-tag">portfolio</span><span class="task-assignee">P</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Design system audit</span></div>
+            <div class="task-footer"><span class="task-tag">design</span><span class="task-assignee">P</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Write project briefs</span></div>
+            <div class="task-footer"><span class="task-tag">writing</span><span class="task-assignee">P</span></div>
           </div>
         </div>
 
-        <!-- Daily Line -->
-        <div>
-          <div class="panel-title">Tokens Today (7-day)</div>
-          <div class="line-wrap">
-            <div class="line-header">
-              <span class="line-val">24.7k</span>
-              <span class="line-delta">↑ 16% vs yesterday</span>
-            </div>
-            <svg class="line-chart" id="line-svg" height="60" viewBox="0 0 240 60" preserveAspectRatio="none"></svg>
-            <div class="line-days" id="line-days"></div>
+        <div class="kanban-col">
+          <div class="kanban-col-hd"><span class="col-name">In Progress</span><span class="col-count">2</span></div>
+          <div class="task-card task-active">
+            <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Dashboard concept mockups</span></div>
+            <div class="task-footer"><span class="task-tag">pluto</span><span class="task-assignee">P</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Connect Figma API</span></div>
+            <div class="task-footer"><span class="task-tag">dev</span><span class="task-assignee">P</span></div>
           </div>
         </div>
 
-        <!-- Projects -->
-        <div>
-          <div class="panel-title">Projects</div>
-          <div class="projects-list">
-            <div class="project-row">
-              <span class="project-dot" style="background:oklch(62% 0.21 24)"></span>
-              <span class="project-name">Portfolio Rebuild</span>
-              <span class="project-status status-active">Active</span>
-            </div>
-            <div class="project-row">
-              <span class="project-dot" style="background:oklch(75% 0.16 74)"></span>
-              <span class="project-name">Pluto Dashboard</span>
-              <span class="project-status status-active">Active</span>
-            </div>
-            <div class="project-row">
-              <span class="project-dot" style="background:var(--accent-mid)"></span>
-              <span class="project-name">Agent Setup</span>
-              <span class="project-status status-done">Done</span>
-            </div>
+        <div class="kanban-col">
+          <div class="kanban-col-hd"><span class="col-name">Review</span><span class="col-count">1</span></div>
+          <div class="task-card">
+            <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Agent architecture setup</span></div>
+            <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
+          </div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-hd"><span class="col-name">Done</span><span class="col-count">3</span></div>
+          <div class="task-card task-done">
+            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Bootstrap OpenClaw</span></div>
+            <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
+          </div>
+          <div class="task-card task-done">
+            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Configure integrations</span></div>
+            <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
+          </div>
+          <div class="task-card task-done">
+            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Multi-agent isolation</span></div>
+            <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
           </div>
         </div>
 
@@ -538,64 +449,54 @@ body {
 </div>
 
 <script>
-// ─── Donut Chart ─────────────────────────────────────────
+// ─── Donut ring ───────────────────────────────────────────
 (function() {
   const svg = document.getElementById('donut-svg');
-  const cx = 45, cy = 45, r = 34, sw = 10;
+  const cx = 22, cy = 22, r = 16, sw = 5;
   const pct = 0.37;
   const circ = 2 * Math.PI * r;
-  const used = circ * pct;
   const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
   const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
-
   svg.innerHTML = `
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${border}" stroke-width="${sw}"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
-      stroke="${accent}" stroke-width="${sw}"
-      stroke-dasharray="${used.toFixed(2)} ${circ.toFixed(2)}"
-      stroke-dashoffset="${(circ * 0.25).toFixed(2)}"
-      stroke-linecap="round"
-    />
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${accent}" stroke-width="${sw}"
+      stroke-dasharray="${(circ*pct).toFixed(2)} ${circ.toFixed(2)}"
+      stroke-dashoffset="${(circ*0.25).toFixed(2)}"
+      stroke-linecap="round"/>
   `;
 })();
 
-// ─── Line Chart ───────────────────────────────────────────
+// ─── Sparkline ────────────────────────────────────────────
 (function() {
-  const data   = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
-  const days   = ['Mon','Tue','Wed','Thu','Fri','Sat','Today'];
-  const W = 240, H = 60, pad = 6;
+  const data = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
+  const days = ['M','T','W','T','F','S','T'];
+  const W = 192, H = 40, pad = 4;
   const min = Math.min(...data), max = Math.max(...data), range = max - min;
   const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  const accentDim = getComputedStyle(document.documentElement).getPropertyValue('--accent-dim').trim();
 
-  const pts = data.map((v, i) => {
-    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
-    const y = H - pad - ((v - min) / range) * (H - pad * 2);
-    return [x, y];
-  });
+  const pts = data.map((v, i) => [
+    pad + (i / (data.length - 1)) * (W - pad * 2),
+    H - pad - ((v - min) / range) * (H - pad * 2)
+  ]);
 
-  const polyPts = pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const area = `${pts[0][0].toFixed(1)},${H} ` +
-               pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ') +
-               ` ${pts[pts.length-1][0].toFixed(1)},${H}`;
-  const last = pts[pts.length - 1];
+  const poly = pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `${pts[0][0].toFixed(1)},${H} ` + poly + ` ${pts[pts.length-1][0].toFixed(1)},${H}`;
+  const [lx, ly] = pts[pts.length - 1];
 
-  document.getElementById('line-svg').innerHTML = `
+  document.getElementById('spark-svg').innerHTML = `
     <defs>
-      <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${accent}" stop-opacity="0.18"/>
+      <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${accent}" stop-opacity="0.15"/>
         <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <polygon points="${area}" fill="url(#lg)"/>
-    <polyline points="${polyPts}" fill="none" stroke="${accent}" stroke-width="1.8"
+    <polygon points="${area}" fill="url(#sg)"/>
+    <polyline points="${poly}" fill="none" stroke="${accent}" stroke-width="1.6"
       stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" fill="${accent}"/>
-    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="6" fill="${accent}" opacity="0.15"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.5" fill="${accent}"/>
   `;
 
-  const daysEl = document.getElementById('line-days');
-  daysEl.innerHTML = days.map(d => `<span>${d}</span>`).join('');
+  document.getElementById('spark-days').innerHTML = days.map(d => `<span>${d}</span>`).join('');
 })();
 </script>
 </body>
