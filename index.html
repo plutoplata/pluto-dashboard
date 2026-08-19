@@ -1,443 +1,369 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="a">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pluto Dashboard — Concepts</title>
+<title>Pluto Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ─── Reset ────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 button { border: none; background: none; cursor: pointer; font-family: inherit; }
 
-/* ─── Theme A: Control Room ─────────────────────────────── */
 :root {
-  --bg:          oklch(6% 0 0);
-  --surface:     oklch(10% 0 0);
-  --surface-2:   oklch(14% 0 0);
-  --border:      oklch(21% 0 0);
-  --text:        oklch(91% 0 0);
-  --text-muted:  oklch(50% 0 0);
-  --accent:      oklch(62% 0.19 279);
-  --accent-dim:  oklch(16% 0.07 279);
-  --accent-glow: oklch(62% 0.19 279 / 0.14);
-  --font-sans:   'Space Grotesk', sans-serif;
-  --font-mono:   'DM Mono', monospace;
-  --radius:      3px;
-  --radius-lg:   5px;
-  --sidebar-w:   204px;
-  --density:     14px;
-}
-
-/* ─── Theme B: Field Notes ──────────────────────────────── */
-[data-theme="b"] {
   --bg:          oklch(98.5% 0.005 95);
   --surface:     oklch(96.5% 0.006 95);
   --surface-2:   oklch(93% 0.009 95);
-  --border:      oklch(85% 0.013 95);
+  --border:      oklch(87% 0.012 95);
   --text:        oklch(17% 0.005 95);
-  --text-muted:  oklch(50% 0.013 95);
+  --text-muted:  oklch(52% 0.013 95);
   --accent:      oklch(43% 0.11 154);
-  --accent-dim:  oklch(87% 0.046 154);
+  --accent-mid:  oklch(62% 0.10 154);
+  --accent-dim:  oklch(90% 0.042 154);
   --accent-glow: oklch(43% 0.11 154 / 0.08);
-  --font-sans:   'Outfit', sans-serif;
-  --font-mono:   'Outfit', sans-serif;
-  --radius:      8px;
-  --radius-lg:   12px;
-  --density:     18px;
+  --warn:        oklch(68% 0.16 50);
+  --warn-dim:    oklch(93% 0.05 80);
+  --font:        'Outfit', sans-serif;
+  --r:           8px;
+  --r-lg:        14px;
+  --sidebar-w:   210px;
 }
 
-/* ─── Theme C: Amber Station ────────────────────────────── */
-[data-theme="c"] {
-  --bg:          oklch(11% 0.015 243);
-  --surface:     oklch(15% 0.018 243);
-  --surface-2:   oklch(19% 0.021 243);
-  --border:      oklch(25% 0.024 243);
-  --text:        oklch(92% 0.005 243);
-  --text-muted:  oklch(57% 0.014 243);
-  --accent:      oklch(78% 0.17 74);
-  --accent-dim:  oklch(22% 0.07 74);
-  --accent-glow: oklch(78% 0.17 74 / 0.12);
-  --font-sans:   'Space Grotesk', sans-serif;
-  --font-mono:   'Space Grotesk', sans-serif;
-  --radius:      5px;
-  --radius-lg:   8px;
-  --density:     15px;
-}
-
-/* ─── Base ───────────────────────────────────────────────── */
-html { height: 100%; }
+html, body { height: 100%; }
 body {
-  height: 100%;
-  font-family: var(--font-sans);
+  font-family: var(--font);
   background: var(--bg);
   color: var(--text);
   font-size: 13px;
   line-height: 1.5;
-  transition: background 0.2s, color 0.2s;
 }
 
-/* ─── Concept Switcher ───────────────────────────────────── */
-.switcher {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 14px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  transition: background 0.2s, border-color 0.2s;
-}
-.switcher-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-right: 6px;
-}
-.switcher button {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 3px 11px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-  background: transparent;
-  letter-spacing: 0.05em;
-  transition: all 0.13s;
-}
-.switcher button:hover { color: var(--text); border-color: var(--accent); }
-.switcher button.active {
-  background: var(--accent-dim);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.switcher-sep { color: var(--border); margin: 0 4px; }
-#theme-desc {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-left: 10px;
-  letter-spacing: 0.02em;
-}
-
-/* ─── Shell Grid ─────────────────────────────────────────── */
+/* ─── Shell ─────────────────────────────────────── */
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
-  height: calc(100vh - 40px);
+  height: 100vh;
   overflow: hidden;
 }
 
-/* ─── Sidebar ────────────────────────────────────────────── */
+/* ─── Sidebar ───────────────────────────────────── */
 .sidebar {
   background: var(--surface);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  transition: background 0.2s, border-color 0.2s;
 }
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 16px 14px 14px;
+  gap: 10px;
+  padding: 18px 16px 16px;
   border-bottom: 1px solid var(--border);
 }
 .brand-icon {
-  width: 26px; height: 26px;
+  width: 30px; height: 30px;
   background: var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--r);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700;
-  color: var(--bg);
+  font-size: 14px; font-weight: 700;
+  color: white;
   flex-shrink: 0;
-  font-family: var(--font-mono);
-  transition: background 0.2s;
 }
-.brand-text {}
-.brand-name { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; }
-.brand-sub  { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+.brand-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.brand-sub  { font-size: 10.5px; color: var(--text-muted); }
 
-.nav-group { padding: 10px 8px 4px; }
-.nav-group-label {
+.nav-section { padding: 12px 10px 6px; }
+.nav-label {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted); padding: 2px 6px 6px;
-  font-family: var(--font-mono);
+  color: var(--text-muted); padding: 2px 6px 8px;
 }
 .nav-item {
-  display: flex; align-items: center; gap: 7px;
-  padding: 6px 8px;
-  border-radius: var(--radius);
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 13px; font-weight: 400;
   cursor: pointer;
   transition: all 0.12s;
   user-select: none;
 }
 .nav-item:hover  { background: var(--surface-2); color: var(--text); }
-.nav-item.active { background: var(--accent-dim); color: var(--accent); }
-.nav-icon { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.8; }
-.nav-item.active .nav-icon { opacity: 1; }
-.proj-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
+.nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
 .sidebar-footer {
   margin-top: auto;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-top: 1px solid var(--border);
 }
-.user-row { display: flex; align-items: center; gap: 9px; }
+.user-row { display: flex; align-items: center; gap: 10px; }
 .avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--accent); color: var(--bg);
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: white;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; flex-shrink: 0;
-  font-family: var(--font-mono);
-  transition: background 0.2s;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
 }
-.user-name { font-size: 12px; font-weight: 500; }
-.user-role { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+.user-name { font-size: 13px; font-weight: 500; }
+.user-role { font-size: 10.5px; color: var(--text-muted); }
 
-/* ─── Main ───────────────────────────────────────────────── */
+/* ─── Main ──────────────────────────────────────── */
 .main {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto 1fr;
   overflow: hidden;
 }
 
-/* ─── Header ─────────────────────────────────────────────── */
+/* ─── Header ────────────────────────────────────── */
 .header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 22px;
+  padding: 14px 24px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg);
-  transition: background 0.2s, border-color 0.2s;
 }
-.header-left {}
-.header-title { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
-.header-sub   { font-size: 10.5px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 1px; }
-.header-actions { display: flex; gap: 7px; }
+.header-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+.header-sub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.header-actions { display: flex; gap: 8px; }
 .btn {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px;
-  border-radius: var(--radius);
-  font-size: 12px; font-weight: 500;
+  padding: 6px 13px;
+  border-radius: var(--r);
+  font-size: 12.5px; font-weight: 500;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: white;
   color: var(--text-muted);
-  font-family: var(--font-sans);
   transition: all 0.12s;
 }
 .btn:hover { color: var(--text); border-color: var(--accent); }
 .btn-primary {
-  background: var(--accent-dim);
+  background: var(--accent);
   border-color: var(--accent);
-  color: var(--accent);
+  color: white;
 }
-.btn-primary:hover { filter: brightness(1.1); }
+.btn-primary:hover { filter: brightness(1.08); }
 
-/* ─── Stats Row ──────────────────────────────────────────── */
-.stats {
+/* ─── Content area ──────────────────────────────── */
+.content {
   display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 0;
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: 1fr 280px;
+  overflow: hidden;
 }
-.stat-card {
-  padding: var(--density) 20px;
-  border-right: 1px solid var(--border);
-  background: var(--bg);
-  transition: background 0.2s;
-}
-.stat-card:last-child { border-right: none; }
-.stat-label {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.09em;
-  color: var(--text-muted); font-family: var(--font-mono);
-  margin-bottom: 5px;
-}
-.stat-value {
-  font-size: 24px; font-weight: 700; letter-spacing: -0.035em; line-height: 1;
-  font-family: var(--font-mono);
-}
-.stat-delta { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 5px; }
-.stat-accent { color: var(--accent); }
 
-/* ─── Kanban ─────────────────────────────────────────────── */
-.kanban-wrap {
+/* ─── Kanban ────────────────────────────────────── */
+.kanban-pane {
   overflow-y: auto;
-  padding: 18px 22px;
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
 }
-.kanban-header {
+.section-hd {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 13px;
+  margin-bottom: 14px;
 }
 .section-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-muted); font-weight: 500;
 }
 .kanban {
   display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
   align-items: start;
 }
-.kanban-col {}
 .kanban-col-hd {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 9px;
+  margin-bottom: 10px;
 }
 .col-name {
-  font-size: 10px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.09em; color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--text-muted);
 }
 .col-count {
-  font-size: 9.5px; font-family: var(--font-mono);
+  font-size: 10px;
   background: var(--surface-2); color: var(--text-muted);
-  padding: 1px 6px; border-radius: 99px;
+  padding: 1px 7px; border-radius: 99px;
 }
 .task-card {
-  background: var(--surface);
+  background: white;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 9px 11px;
-  margin-bottom: 7px;
+  border-radius: var(--r-lg);
+  padding: 10px 12px;
+  margin-bottom: 8px;
   cursor: pointer;
-  transition: border-color 0.12s, transform 0.1s, box-shadow 0.12s;
+  transition: border-color 0.12s, box-shadow 0.12s, transform 0.1s;
 }
 .task-card:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-mid);
+  box-shadow: 0 3px 12px var(--accent-glow);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--accent-glow);
 }
-.task-top {
-  display: flex; align-items: flex-start; gap: 7px;
-}
+.task-top { display: flex; align-items: flex-start; gap: 8px; }
 .priority-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
 }
-.p-high { background: oklch(60% 0.22 24); }
-.p-med  { background: oklch(76% 0.17 74); }
-.p-low  { background: oklch(63% 0.14 155); }
-.task-title { font-size: 12px; font-weight: 500; line-height: 1.35; flex: 1; }
+.p-high { background: oklch(62% 0.21 24); }
+.p-med  { background: oklch(75% 0.16 74); }
+.p-low  { background: var(--accent-mid); }
+.task-title { font-size: 12.5px; font-weight: 400; line-height: 1.35; flex: 1; }
 .task-footer {
-  display: flex; align-items: center; justify-content: space-between; margin-top: 9px;
+  display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
 }
 .task-tag {
-  font-size: 9.5px; color: var(--text-muted);
-  background: var(--surface-2); padding: 1px 6px;
-  border-radius: var(--radius); font-family: var(--font-mono);
+  font-size: 10px; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 1px 7px; border-radius: var(--r);
 }
 .task-assignee {
-  width: 19px; height: 19px; border-radius: 50%;
-  background: var(--accent-dim); border: 1px solid var(--accent);
-  color: var(--accent); font-size: 9px; font-weight: 700;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-dim); border: 1px solid var(--accent-mid);
+  color: var(--accent); font-size: 9.5px; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono);
 }
-.task-active  { border-color: var(--accent) !important; }
-.task-done    { opacity: 0.45; }
+.task-active  { border-color: var(--accent) !important; border-left-width: 3px; }
+.task-done    { opacity: 0.42; }
 .task-done .task-title { text-decoration: line-through; }
 
-/* ─── Analytics Strip ────────────────────────────────────── */
-.analytics {
-  border-top: 1px solid var(--border);
-  padding: 11px 22px;
+/* ─── Right Panel ───────────────────────────────── */
+.right-panel {
+  overflow-y: auto;
+  padding: 20px 20px;
   background: var(--surface);
-  display: flex; align-items: center; gap: 20px;
-  transition: background 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.analytics-label {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.09em;
-  color: var(--text-muted); font-family: var(--font-mono);
-  white-space: nowrap;
+
+/* ─── Token Charts ──────────────────────────────── */
+.panel-title {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-muted); font-weight: 500; margin-bottom: 12px;
 }
-.sparkline-wrap { flex: 1; display: flex; align-items: center; gap: 14px; min-width: 0; }
-#sparkline { height: 34px; flex: 1; max-width: 260px; overflow: visible; }
-.analytics-kpis { display: flex; gap: 18px; }
-.kpi { text-align: right; }
-.kpi-val { font-size: 13px; font-weight: 600; color: var(--accent); font-family: var(--font-mono); }
-.kpi-lbl { font-size: 9.5px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* Donut Chart */
+.donut-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+}
+.donut-chart-area {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 12px;
+}
+.donut-svg-wrap { position: relative; flex-shrink: 0; }
+.donut-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.donut-val  { font-size: 16px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); }
+.donut-sub  { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
+.donut-meta {}
+.donut-label { font-size: 12.5px; font-weight: 500; margin-bottom: 3px; }
+.donut-caption { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+.donut-legend { display: flex; flex-direction: column; gap: 6px; }
+.legend-row { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Line Chart */
+.line-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+}
+.line-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.line-val { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
+.line-delta {
+  font-size: 10.5px; color: var(--text-muted);
+  background: var(--accent-dim); color: var(--accent);
+  padding: 2px 7px; border-radius: 99px;
+}
+.line-chart { width: 100%; }
+.line-days {
+  display: flex; justify-content: space-between;
+  margin-top: 6px;
+  font-size: 9px; color: var(--text-muted);
+}
+
+/* ─── Projects panel ────────────────────────────── */
+.projects-list { display: flex; flex-direction: column; gap: 8px; }
+.project-row {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.project-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.project-name { font-size: 12.5px; font-weight: 500; flex: 1; }
+.project-status {
+  font-size: 10px; padding: 1px 8px; border-radius: 99px;
+  font-weight: 500;
+}
+.status-active   { background: var(--accent-dim); color: var(--accent); }
+.status-done     { background: var(--surface-2); color: var(--text-muted); }
 </style>
 </head>
 <body>
-
-<!-- ─── Switcher ──────────────────────────────────────────── -->
-<div class="switcher">
-  <span class="switcher-label">Concept</span>
-  <button class="active" data-theme="a" onclick="setTheme('a',this)">A</button>
-  <button data-theme="b" onclick="setTheme('b',this)">B</button>
-  <button data-theme="c" onclick="setTheme('c',this)">C</button>
-  <span class="switcher-sep">·</span>
-  <span id="theme-desc">Control Room — Dark, Violet, Dense</span>
-</div>
-
 <div class="shell">
 
-  <!-- ─── Sidebar ──────────────────────────────────────────── -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-icon">P</div>
-      <div class="brand-text">
+      <div>
         <div class="brand-name">Pluto</div>
         <div class="brand-sub">AI Assistant</div>
       </div>
     </div>
 
-    <div class="nav-group">
-      <div class="nav-group-label">Workspace</div>
+    <div class="nav-section">
+      <div class="nav-label">Workspace</div>
       <div class="nav-item active">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/>
-          <rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
-        </svg>
-        Overview
+          <rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/>
+          <rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/>
+        </svg>Overview
       </div>
       <div class="nav-item">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M13 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
           <path d="M5 6h6M5 9.5h4"/>
-        </svg>
-        Projects
+        </svg>Projects
       </div>
       <div class="nav-item">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M2 4h12M2 8h8M2 12h5"/>
-          <circle cx="13.5" cy="12" r="1.75"/>
-        </svg>
-        Tasks
+          <path d="M2 4h12M2 8h8M2 12h5"/><circle cx="13.5" cy="12" r="1.75"/>
+        </svg>Tasks
       </div>
       <div class="nav-item">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="1" y="1" width="14" height="14" rx="2"/>
           <path d="M2 11.5l3.5-4 2.5 2.5 3-4 3 3"/>
-        </svg>
-        Analytics
+        </svg>Analytics
       </div>
       <div class="nav-item">
         <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="8" cy="8" r="2.25"/>
-          <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.22 3.22l1.06 1.06M11.72 11.72l1.06 1.06M12.78 3.22l-1.06 1.06M4.28 11.72l-1.06 1.06"/>
-        </svg>
-        Settings
+          <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15"/>
+        </svg>Settings
       </div>
     </div>
 
-    <div class="nav-group" style="margin-top:6px">
-      <div class="nav-group-label">Projects</div>
+    <div class="nav-section" style="margin-top:4px">
+      <div class="nav-label">Projects</div>
       <div class="nav-item">
-        <span class="proj-dot p-high"></span>
-        Portfolio Rebuild
+        <span class="proj-dot" style="background:oklch(62% 0.21 24)"></span>Portfolio Rebuild
       </div>
       <div class="nav-item">
-        <span class="proj-dot p-med"></span>
-        Pluto Dashboard
+        <span class="proj-dot" style="background:oklch(75% 0.16 74)"></span>Pluto Dashboard
       </div>
-      <div class="nav-item" style="opacity:0.45">
-        <span class="proj-dot p-low"></span>
-        Agent Setup
+      <div class="nav-item" style="opacity:0.5">
+        <span class="proj-dot" style="background:var(--accent-mid)"></span>Agent Setup
       </div>
     </div>
 
@@ -452,13 +378,12 @@ body {
     </div>
   </aside>
 
-  <!-- ─── Main ─────────────────────────────────────────────── -->
+  <!-- Main -->
   <main class="main">
-
     <header class="header">
-      <div class="header-left">
+      <div>
         <div class="header-title">Overview</div>
-        <div class="header-sub">Tue 2026-08-18 · Pluto v1.0 · claude-sonnet-4</div>
+        <div class="header-sub">Wed 2026-08-19 · claude-sonnet-4-6</div>
       </div>
       <div class="header-actions">
         <button class="btn">⌘ Quick Action</button>
@@ -466,254 +391,212 @@ body {
       </div>
     </header>
 
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-label">Active Projects</div>
-        <div class="stat-value">2</div>
-        <div class="stat-delta">↑ 1 added this week</div>
+    <div class="content">
+
+      <!-- Kanban -->
+      <div class="kanban-pane">
+        <div class="section-hd">
+          <span class="section-title">Task Board</span>
+          <button class="btn" style="font-size:11px;padding:4px 10px">Filter ▾</button>
+        </div>
+        <div class="kanban">
+
+          <div class="kanban-col">
+            <div class="kanban-col-hd">
+              <span class="col-name">Backlog</span>
+              <span class="col-count">3</span>
+            </div>
+            <div class="task-card">
+              <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Finalize case study structure</span></div>
+              <div class="task-footer"><span class="task-tag">portfolio</span><span class="task-assignee">P</span></div>
+            </div>
+            <div class="task-card">
+              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Design system audit</span></div>
+              <div class="task-footer"><span class="task-tag">design</span><span class="task-assignee">P</span></div>
+            </div>
+            <div class="task-card">
+              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Write project briefs</span></div>
+              <div class="task-footer"><span class="task-tag">writing</span><span class="task-assignee">P</span></div>
+            </div>
+          </div>
+
+          <div class="kanban-col">
+            <div class="kanban-col-hd">
+              <span class="col-name">In Progress</span>
+              <span class="col-count">2</span>
+            </div>
+            <div class="task-card task-active">
+              <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Dashboard concept mockups</span></div>
+              <div class="task-footer"><span class="task-tag">pluto</span><span class="task-assignee">P</span></div>
+            </div>
+            <div class="task-card">
+              <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Connect Figma API</span></div>
+              <div class="task-footer"><span class="task-tag">dev</span><span class="task-assignee">P</span></div>
+            </div>
+          </div>
+
+          <div class="kanban-col">
+            <div class="kanban-col-hd">
+              <span class="col-name">Review</span>
+              <span class="col-count">1</span>
+            </div>
+            <div class="task-card">
+              <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Agent architecture setup</span></div>
+              <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
+            </div>
+          </div>
+
+          <div class="kanban-col">
+            <div class="kanban-col-hd">
+              <span class="col-name">Done</span>
+              <span class="col-count">3</span>
+            </div>
+            <div class="task-card task-done">
+              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Bootstrap OpenClaw</span></div>
+              <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
+            </div>
+            <div class="task-card task-done">
+              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Configure integrations</span></div>
+              <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
+            </div>
+            <div class="task-card task-done">
+              <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Multi-agent isolation</span></div>
+              <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Open Tasks</div>
-        <div class="stat-value">8</div>
-        <div class="stat-delta">3 in progress · 1 in review</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tokens Today</div>
-        <div class="stat-value stat-accent">24.7k</div>
-        <div class="stat-delta">↑ 16% vs yesterday</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tokens This Month</div>
-        <div class="stat-value stat-accent">186k</div>
-        <div class="stat-delta">↑ 12% vs last month</div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+
+        <!-- Monthly Donut -->
+        <div>
+          <div class="panel-title">Tokens This Month</div>
+          <div class="donut-wrap">
+            <div class="donut-chart-area">
+              <div class="donut-svg-wrap">
+                <svg width="90" height="90" viewBox="0 0 90 90" id="donut-svg">
+                  <!-- drawn by JS -->
+                </svg>
+                <div class="donut-center">
+                  <div class="donut-val">186k</div>
+                  <div class="donut-sub">of 500k</div>
+                </div>
+              </div>
+              <div class="donut-meta">
+                <div class="donut-label">37% used</div>
+                <div class="donut-caption" style="color:var(--text-muted);font-size:10.5px;margin-top:3px">18 days remaining<br>in billing period</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-row"><span class="legend-dot" style="background:var(--accent)"></span>Used — 186k</div>
+              <div class="legend-row"><span class="legend-dot" style="background:var(--border)"></span>Remaining — 314k</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Line -->
+        <div>
+          <div class="panel-title">Tokens Today (7-day)</div>
+          <div class="line-wrap">
+            <div class="line-header">
+              <span class="line-val">24.7k</span>
+              <span class="line-delta">↑ 16% vs yesterday</span>
+            </div>
+            <svg class="line-chart" id="line-svg" height="60" viewBox="0 0 240 60" preserveAspectRatio="none"></svg>
+            <div class="line-days" id="line-days"></div>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div>
+          <div class="panel-title">Projects</div>
+          <div class="projects-list">
+            <div class="project-row">
+              <span class="project-dot" style="background:oklch(62% 0.21 24)"></span>
+              <span class="project-name">Portfolio Rebuild</span>
+              <span class="project-status status-active">Active</span>
+            </div>
+            <div class="project-row">
+              <span class="project-dot" style="background:oklch(75% 0.16 74)"></span>
+              <span class="project-name">Pluto Dashboard</span>
+              <span class="project-status status-active">Active</span>
+            </div>
+            <div class="project-row">
+              <span class="project-dot" style="background:var(--accent-mid)"></span>
+              <span class="project-name">Agent Setup</span>
+              <span class="project-status status-done">Done</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <!-- Kanban -->
-    <div class="kanban-wrap">
-      <div class="kanban-header">
-        <span class="section-title">Task Board</span>
-        <button class="btn" style="font-size:10.5px;padding:3px 9px">Filter ▾</button>
-      </div>
-
-      <div class="kanban">
-
-        <!-- Backlog -->
-        <div class="kanban-col">
-          <div class="kanban-col-hd">
-            <span class="col-name">Backlog</span>
-            <span class="col-count">3</span>
-          </div>
-          <div class="task-card">
-            <div class="task-top">
-              <span class="priority-dot p-med"></span>
-              <span class="task-title">Finalize case study structure</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">portfolio</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-          <div class="task-card">
-            <div class="task-top">
-              <span class="priority-dot p-low"></span>
-              <span class="task-title">Design system audit</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">design</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-          <div class="task-card">
-            <div class="task-top">
-              <span class="priority-dot p-low"></span>
-              <span class="task-title">Write project briefs</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">writing</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- In Progress -->
-        <div class="kanban-col">
-          <div class="kanban-col-hd">
-            <span class="col-name">In Progress</span>
-            <span class="col-count">2</span>
-          </div>
-          <div class="task-card task-active">
-            <div class="task-top">
-              <span class="priority-dot p-high"></span>
-              <span class="task-title">Dashboard concept mockups</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">pluto</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-          <div class="task-card">
-            <div class="task-top">
-              <span class="priority-dot p-med"></span>
-              <span class="task-title">Connect Figma API</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">dev</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Review -->
-        <div class="kanban-col">
-          <div class="kanban-col-hd">
-            <span class="col-name">Review</span>
-            <span class="col-count">1</span>
-          </div>
-          <div class="task-card">
-            <div class="task-top">
-              <span class="priority-dot p-high"></span>
-              <span class="task-title">Agent architecture setup</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">agent</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Done -->
-        <div class="kanban-col">
-          <div class="kanban-col-hd">
-            <span class="col-name">Done</span>
-            <span class="col-count">3</span>
-          </div>
-          <div class="task-card task-done">
-            <div class="task-top">
-              <span class="priority-dot p-low"></span>
-              <span class="task-title">Bootstrap OpenClaw</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">setup</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-          <div class="task-card task-done">
-            <div class="task-top">
-              <span class="priority-dot p-low"></span>
-              <span class="task-title">Configure integrations</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">setup</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-          <div class="task-card task-done">
-            <div class="task-top">
-              <span class="priority-dot p-low"></span>
-              <span class="task-title">Set up multi-agent isolation</span>
-            </div>
-            <div class="task-footer">
-              <span class="task-tag">agent</span>
-              <span class="task-assignee">P</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /kanban -->
-    </div><!-- /kanban-wrap -->
-
-    <!-- Analytics Strip -->
-    <div class="analytics">
-      <span class="analytics-label">Token Usage · 7d</span>
-      <div class="sparkline-wrap">
-        <svg id="sparkline" viewBox="0 0 260 34" preserveAspectRatio="none"></svg>
-        <div class="analytics-kpis">
-          <div class="kpi">
-            <div class="kpi-val">24.7k</div>
-            <div class="kpi-lbl">today</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-val">186k</div>
-            <div class="kpi-lbl">month</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-val">↑ 18%</div>
-            <div class="kpi-lbl">vs last wk</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </main>
 </div>
 
 <script>
-const THEME_LABELS = {
-  a: 'Control Room — Dark, Violet, Dense',
-  b: 'Field Notes — Light, Forest Green, Airy',
-  c: 'Amber Station — Dark Slate, Amber, Analytics'
-};
+// ─── Donut Chart ─────────────────────────────────────────
+(function() {
+  const svg = document.getElementById('donut-svg');
+  const cx = 45, cy = 45, r = 34, sw = 10;
+  const pct = 0.37;
+  const circ = 2 * Math.PI * r;
+  const used = circ * pct;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
 
-const SPARK_DATA = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
+  svg.innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${border}" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="${accent}" stroke-width="${sw}"
+      stroke-dasharray="${used.toFixed(2)} ${circ.toFixed(2)}"
+      stroke-dashoffset="${(circ * 0.25).toFixed(2)}"
+      stroke-linecap="round"
+    />
+  `;
+})();
 
-function setTheme(t, btn) {
-  document.documentElement.setAttribute('data-theme', t);
-  document.querySelectorAll('.switcher button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('theme-desc').textContent = THEME_LABELS[t];
-  // Redraw sparkline after CSS vars update
-  requestAnimationFrame(drawSparkline);
-}
-
-function drawSparkline() {
-  const svg = document.getElementById('sparkline');
-  const W = 260, H = 34;
-  const data = SPARK_DATA;
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-  const pad = 3;
+// ─── Line Chart ───────────────────────────────────────────
+(function() {
+  const data   = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
+  const days   = ['Mon','Tue','Wed','Thu','Fri','Sat','Today'];
+  const W = 240, H = 60, pad = 6;
+  const min = Math.min(...data), max = Math.max(...data), range = max - min;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const accentDim = getComputedStyle(document.documentElement).getPropertyValue('--accent-dim').trim();
 
   const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1)) * W;
+    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
     const y = H - pad - ((v - min) / range) * (H - pad * 2);
     return [x, y];
   });
 
-  const style = getComputedStyle(document.documentElement);
-  const accent = style.getPropertyValue('--accent').trim() || 'violet';
-  const accentGlow = style.getPropertyValue('--accent-glow').trim() || 'rgba(124,113,246,0.14)';
-
-  const polyPts  = pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const areaPts  = `${pts[0][0].toFixed(1)},${H} ` +
-                   pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ') +
-                   ` ${pts[pts.length-1][0].toFixed(1)},${H}`;
+  const polyPts = pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `${pts[0][0].toFixed(1)},${H} ` +
+               pts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ') +
+               ` ${pts[pts.length-1][0].toFixed(1)},${H}`;
   const last = pts[pts.length - 1];
 
-  svg.innerHTML = `
+  document.getElementById('line-svg').innerHTML = `
     <defs>
-      <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${accent}" stop-opacity="0.25"/>
+      <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${accent}" stop-opacity="0.18"/>
         <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <polygon points="${areaPts}" fill="url(#sg)"/>
-    <polyline
-      points="${polyPts}"
-      fill="none"
-      stroke="${accent}"
-      stroke-width="1.5"
-      stroke-linejoin="round"
-      stroke-linecap="round"
-    />
-    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2.5" fill="${accent}"/>
+    <polygon points="${area}" fill="url(#lg)"/>
+    <polyline points="${polyPts}" fill="none" stroke="${accent}" stroke-width="1.8"
+      stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3" fill="${accent}"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="6" fill="${accent}" opacity="0.15"/>
   `;
-}
 
-// Initial draw
-drawSparkline();
+  const daysEl = document.getElementById('line-days');
+  daysEl.innerHTML = days.map(d => `<span>${d}</span>`).join('');
+})();
 </script>
 </body>
 </html>
