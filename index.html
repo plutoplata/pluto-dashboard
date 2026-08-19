@@ -22,6 +22,12 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
   --accent-mid:  oklch(62% 0.10 154);
   --accent-dim:  oklch(90% 0.042 154);
   --accent-glow: oklch(43% 0.11 154 / 0.08);
+  --green:       oklch(62% 0.18 145);
+  --green-dim:   oklch(92% 0.06 145);
+  --amber:       oklch(72% 0.16 74);
+  --amber-dim:   oklch(93% 0.06 74);
+  --red:         oklch(60% 0.20 24);
+  --red-dim:     oklch(93% 0.05 24);
   --font:        'Outfit', sans-serif;
   --r:           8px;
   --r-lg:        12px;
@@ -54,6 +60,7 @@ body {
   overflow-y: auto;
 }
 
+/* Brand */
 .sidebar-brand {
   display: flex;
   align-items: center;
@@ -69,9 +76,29 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
 }
+.brand-text { flex: 1; min-width: 0; }
 .brand-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .brand-sub  { font-size: 10.5px; color: var(--text-muted); }
 
+/* Status dot */
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25);
+  flex-shrink: 0;
+  animation: pulse-dot 2.5s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25); }
+  50%       { box-shadow: 0 0 0 5px oklch(62% 0.18 145 / 0.08); }
+}
+.status-dot.offline {
+  background: var(--red);
+  box-shadow: none;
+  animation: none;
+}
+
+/* Nav */
 .nav-section { padding: 12px 10px 4px; flex-shrink: 0; }
 .nav-label {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
@@ -92,87 +119,81 @@ body {
 .nav-icon { width: 15px; height: 15px; flex-shrink: 0; }
 .proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-/* ─── Token section in sidebar ───────────────────── */
+/* ─── Token section ─────────────────────────────── */
 .token-section {
-  padding: 14px 14px 8px;
+  padding: 14px 14px 12px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
+  margin-top: 4px;
 }
-.token-section-label {
+.token-label {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted); margin-bottom: 10px; display: block;
+  color: var(--text-muted); display: block; margin-bottom: 10px;
 }
 
-/* Donut — compact */
-.donut-card {
+/* Monthly card */
+.token-card {
   background: white;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 12px;
   margin-bottom: 8px;
 }
-.donut-row {
-  display: flex; align-items: center; gap: 12px;
+.token-card-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
 }
-.donut-info { flex: 1; min-width: 0; }
-.donut-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
-.donut-card-val   { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-.donut-card-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
-.donut-pct-bar {
-  width: 100%; height: 4px;
-  background: var(--surface-2);
-  border-radius: 99px;
-  margin-top: 8px;
-  overflow: hidden;
+.donut-wrap { position: relative; flex-shrink: 0; }
+.donut-center-text {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
 }
-.donut-pct-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 99px;
-  transition: width 0.4s ease;
-}
+.donut-pct  { font-size: 11px; font-weight: 700; line-height: 1; }
+.token-meta { flex: 1; min-width: 0; }
+.token-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+.token-card-val   { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.token-card-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
 
-/* Mini sparkline card */
+/* Health bar */
+.health-bar {
+  width: 100%; height: 4px;
+  background: var(--surface-2); border-radius: 99px; overflow: hidden;
+}
+.health-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+.fill-ok   { background: var(--green); }
+.fill-warn { background: var(--amber); }
+.fill-crit { background: var(--red); }
+
+/* Health badge */
+.health-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9.5px; font-weight: 500;
+  padding: 2px 8px; border-radius: 99px; margin-top: 7px;
+}
+.badge-ok   { background: var(--green-dim); color: oklch(38% 0.14 145); }
+.badge-warn { background: var(--amber-dim); color: oklch(48% 0.14 74); }
+.badge-crit { background: var(--red-dim);   color: oklch(42% 0.18 24); }
+.badge-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* Today sparkline card */
 .spark-card {
   background: white;
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 12px;
 }
-.spark-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-bottom: 8px;
+.spark-top {
+  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px;
 }
 .spark-label { font-size: 10px; color: var(--text-muted); }
-.spark-val   { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; }
-.spark-delta {
-  font-size: 10px; font-weight: 500;
-  color: var(--accent);
-  background: var(--accent-dim);
-  padding: 1px 6px; border-radius: 99px;
+.spark-badge {
+  font-size: 9.5px; font-weight: 500; padding: 1px 7px; border-radius: 99px;
 }
+.spark-val { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
 .spark-days {
-  display: flex; justify-content: space-between;
-  margin-top: 4px;
+  display: flex; justify-content: space-between; margin-top: 5px;
   font-size: 8.5px; color: var(--text-muted);
 }
-
-/* ─── Sidebar footer ─────────────────────────────── */
-.sidebar-footer {
-  margin-top: auto;
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.user-row { display: flex; align-items: center; gap: 10px; }
-.avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--accent); color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 600; flex-shrink: 0;
-}
-.user-name { font-size: 12.5px; font-weight: 500; }
-.user-role { font-size: 10px; color: var(--text-muted); }
 
 /* ─── Main ──────────────────────────────────────── */
 .main {
@@ -275,14 +296,18 @@ body {
 
   <!-- ─── Sidebar ─────────────────────────────────── -->
   <aside class="sidebar">
+
+    <!-- Brand + status dot -->
     <div class="sidebar-brand">
       <div class="brand-icon">P</div>
-      <div>
+      <div class="brand-text">
         <div class="brand-name">Pluto</div>
         <div class="brand-sub">AI Assistant</div>
       </div>
+      <span class="status-dot" id="status-dot" title="Online"></span>
     </div>
 
+    <!-- Nav -->
     <div class="nav-section">
       <div class="nav-label">Workspace</div>
       <div class="nav-item active">
@@ -331,44 +356,45 @@ body {
 
     <!-- Token Stats -->
     <div class="token-section">
-      <span class="token-section-label">Token Usage</span>
+      <span class="token-label">Token Usage</span>
 
-      <!-- Monthly donut-style progress -->
-      <div class="donut-card">
-        <div class="donut-row">
-          <svg width="44" height="44" viewBox="0 0 44 44" id="donut-svg" style="flex-shrink:0"></svg>
-          <div class="donut-info">
-            <div class="donut-card-label">This Month</div>
-            <div class="donut-card-val">186k</div>
-            <div class="donut-card-sub">37% of 500k limit</div>
+      <!-- Monthly -->
+      <div class="token-card">
+        <div class="token-card-row">
+          <div class="donut-wrap">
+            <svg width="48" height="48" viewBox="0 0 48 48" id="donut-svg"></svg>
+            <div class="donut-center-text">
+              <span class="donut-pct" id="donut-pct-text">37%</span>
+            </div>
+          </div>
+          <div class="token-meta">
+            <div class="token-card-label">This Month</div>
+            <div class="token-card-val">186k</div>
+            <div class="token-card-sub">of 500k limit</div>
           </div>
         </div>
-        <div class="donut-pct-bar">
-          <div class="donut-pct-fill" style="width:37%"></div>
+        <div class="health-bar">
+          <div class="health-fill fill-ok" id="monthly-fill" style="width:37%"></div>
+        </div>
+        <div class="health-badge badge-ok" id="monthly-badge">
+          <span class="badge-dot"></span>Healthy — 18 days left
         </div>
       </div>
 
       <!-- Today sparkline -->
       <div class="spark-card">
-        <div class="spark-header">
+        <div class="spark-top">
           <span class="spark-label">Today</span>
-          <span class="spark-delta">↑ 16%</span>
+          <span class="spark-badge badge-ok" id="daily-badge">
+            ↑ 16%
+          </span>
         </div>
         <div class="spark-val">24.7k</div>
-        <svg id="spark-svg" width="100%" height="40" viewBox="0 0 192 40" preserveAspectRatio="none" style="margin-top:8px;display:block"></svg>
+        <svg id="spark-svg" width="100%" height="38" viewBox="0 0 192 38" preserveAspectRatio="none" style="display:block"></svg>
         <div class="spark-days" id="spark-days"></div>
       </div>
     </div>
 
-    <div class="sidebar-footer">
-      <div class="user-row">
-        <div class="avatar">T</div>
-        <div>
-          <div class="user-name">Truong</div>
-          <div class="user-role">Creative Director</div>
-        </div>
-      </div>
-    </div>
   </aside>
 
   <!-- ─── Main ─────────────────────────────────────── -->
@@ -449,30 +475,66 @@ body {
 </div>
 
 <script>
+// ─── Health logic ─────────────────────────────────────────
+// Thresholds: warn at 65%, crit at 85%
+function healthClass(pct) {
+  if (pct >= 0.85) return 'crit';
+  if (pct >= 0.65) return 'warn';
+  return 'ok';
+}
+function badgeText(pct, daysLeft) {
+  if (pct >= 0.85) return `⚠ Critical — ${daysLeft}d left`;
+  if (pct >= 0.65) return `↗ Watch it — ${daysLeft}d left`;
+  return `✓ Healthy — ${daysLeft}d left`;
+}
+
+// Monthly: 186k / 500k = 37%
+const monthlyPct  = 186000 / 500000;
+const monthlyH    = healthClass(monthlyPct);
+const monthlyFill = document.getElementById('monthly-fill');
+const monthlyBadge= document.getElementById('monthly-badge');
+monthlyFill.style.width = (monthlyPct * 100).toFixed(1) + '%';
+monthlyFill.className = `health-fill fill-${monthlyH}`;
+monthlyBadge.className = `health-badge badge-${monthlyH}`;
+monthlyBadge.innerHTML = `<span class="badge-dot"></span>${badgeText(monthlyPct, 18)}`;
+
+// Daily: 24.7k / 50k daily budget = 49% — adjust DAILY_LIMIT to your actual budget
+const DAILY_LIMIT = 50000;
+const dailyUsed   = 24700;
+const dailyPct    = dailyUsed / DAILY_LIMIT;
+const dailyH      = healthClass(dailyPct);
+const dailyBadge  = document.getElementById('daily-badge');
+dailyBadge.className = `spark-badge badge-${dailyH}`;
+dailyBadge.textContent = dailyH === 'ok' ? '↑ 16%' : dailyH === 'warn' ? '↗ Watch' : '⚠ High';
+
 // ─── Donut ring ───────────────────────────────────────────
 (function() {
-  const svg = document.getElementById('donut-svg');
-  const cx = 22, cy = 22, r = 16, sw = 5;
-  const pct = 0.37;
+  const svg  = document.getElementById('donut-svg');
+  const cx = 24, cy = 24, r = 18, sw = 5;
   const circ = 2 * Math.PI * r;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const used = circ * monthlyPct;
+  const colors = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
+  const stroke = colors[monthlyH];
   const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
   svg.innerHTML = `
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${border}" stroke-width="${sw}"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${accent}" stroke-width="${sw}"
-      stroke-dasharray="${(circ*pct).toFixed(2)} ${circ.toFixed(2)}"
-      stroke-dashoffset="${(circ*0.25).toFixed(2)}"
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${stroke}" stroke-width="${sw}"
+      stroke-dasharray="${used.toFixed(2)} ${circ.toFixed(2)}"
+      stroke-dashoffset="${(circ * 0.25).toFixed(2)}"
       stroke-linecap="round"/>
   `;
+  document.getElementById('donut-pct-text').textContent = Math.round(monthlyPct * 100) + '%';
+  document.getElementById('donut-pct-text').style.color = stroke;
 })();
 
 // ─── Sparkline ────────────────────────────────────────────
 (function() {
   const data = [8200, 11400, 9800, 15600, 18900, 21200, 24700];
   const days = ['M','T','W','T','F','S','T'];
-  const W = 192, H = 40, pad = 4;
+  const W = 192, H = 38, pad = 4;
   const min = Math.min(...data), max = Math.max(...data), range = max - min;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const colors = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
+  const stroke = colors[dailyH];
 
   const pts = data.map((v, i) => [
     pad + (i / (data.length - 1)) * (W - pad * 2),
@@ -486,14 +548,14 @@ body {
   document.getElementById('spark-svg').innerHTML = `
     <defs>
       <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${accent}" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+        <stop offset="0%" stop-color="${stroke}" stop-opacity="0.15"/>
+        <stop offset="100%" stop-color="${stroke}" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <polygon points="${area}" fill="url(#sg)"/>
-    <polyline points="${poly}" fill="none" stroke="${accent}" stroke-width="1.6"
+    <polyline points="${poly}" fill="none" stroke="${stroke}" stroke-width="1.6"
       stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.5" fill="${accent}"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.5" fill="${stroke}"/>
   `;
 
   document.getElementById('spark-days').innerHTML = days.map(d => `<span>${d}</span>`).join('');
