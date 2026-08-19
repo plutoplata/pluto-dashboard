@@ -498,8 +498,13 @@ body {
 
 <script>
 // ─── Health logic ─────────────────────────────────────────
+const COLORS = {
+  ok:   'oklch(62% 0.18 145)',
+  warn: 'oklch(72% 0.16 74)',
+  crit: 'oklch(60% 0.20 24)'
+};
 function healthClass(pct) {
-  if (pct >= 1.0)  return 'crit'; // over limit
+  if (pct >= 1.0)  return 'crit';
   if (pct >= 0.85) return 'crit';
   if (pct >= 0.65) return 'warn';
   return 'ok';
@@ -534,11 +539,9 @@ const DAILY_LIMIT = 50000;
 const dailyUsed   = 24700;
 const dailyPct    = dailyUsed / DAILY_LIMIT;
 const dailyH      = healthClass(dailyPct);
-const fillColors  = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
-
 const gaugeFill = document.getElementById('gauge-fill');
-gaugeFill.style.width  = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
-gaugeFill.style.background = fillColors[dailyH];
+gaugeFill.style.width = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
+gaugeFill.style.background = COLORS[dailyH];
 
 const dailyBadge = document.getElementById('daily-badge');
 dailyBadge.className = `gauge-badge badge-${dailyH}`;
@@ -558,8 +561,7 @@ if (dailyPct >= 1) {
   const cx = 24, cy = 24, r = 18, sw = 5;
   const circ = 2 * Math.PI * r;
   const used = circ * monthlyPct;
-  const colors = { ok: 'var(--green)', warn: 'var(--amber)', crit: 'var(--red)' };
-  const stroke = colors[monthlyH];
+  const stroke = COLORS[monthlyH];
   const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
   svg.innerHTML = `
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${border}" stroke-width="${sw}"/>
