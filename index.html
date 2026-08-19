@@ -41,6 +41,7 @@ body {
   color: var(--text);
   font-size: 13px;
   line-height: 1.5;
+  overflow: hidden;
 }
 
 /* ─── Shell ─────────────────────────────────────── */
@@ -58,6 +59,8 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  position: relative;
+  z-index: 100;
 }
 
 /* Brand */
@@ -79,6 +82,7 @@ body {
 .brand-text { flex: 1; min-width: 0; }
 .brand-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .brand-sub  { font-size: 10.5px; color: var(--text-muted); }
+.brand-sub-offline { font-size: 9.5px; color: var(--red); display: none; }
 
 /* Status dot */
 .status-dot {
@@ -87,6 +91,7 @@ body {
   box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25);
   flex-shrink: 0;
   animation: pulse-dot 2.5s ease-in-out infinite;
+  transition: background 0.3s;
 }
 @keyframes pulse-dot {
   0%, 100% { box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25); }
@@ -113,6 +118,7 @@ body {
   cursor: pointer;
   transition: all 0.12s;
   user-select: none;
+  min-height: 36px;
 }
 .nav-item:hover  { background: var(--surface-2); color: var(--text); }
 .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
@@ -124,12 +130,19 @@ body {
   padding: 14px 14px 12px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
-  margin-top: 4px;
+  margin-top: auto;
 }
 .token-label {
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted); display: block; margin-bottom: 10px;
+  color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
 }
+.token-label-refresh {
+  font-size: 9px; color: var(--text-muted); opacity: 0.6;
+  cursor: pointer; padding: 2px 4px; border-radius: 4px;
+  transition: opacity 0.2s;
+}
+.token-label-refresh:hover { opacity: 1; }
 
 /* Monthly card */
 .token-card {
@@ -153,16 +166,6 @@ body {
 .token-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
 .token-card-val   { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
 .token-card-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
-
-/* Health bar */
-.health-bar {
-  width: 100%; height: 4px;
-  background: var(--surface-2); border-radius: 99px; overflow: hidden;
-}
-.health-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
-.fill-ok   { background: var(--green); }
-.fill-warn { background: var(--amber); }
-.fill-crit { background: var(--red); }
 
 /* Health badge */
 .health-badge {
@@ -189,7 +192,6 @@ body {
 .gauge-badge {
   font-size: 9.5px; font-weight: 500; padding: 1px 7px; border-radius: 99px;
 }
-/* Linear gauge track */
 .gauge-track {
   width: 100%; height: 8px;
   background: var(--surface-2); border-radius: 99px;
@@ -197,11 +199,10 @@ body {
 }
 .gauge-fill {
   height: 100%; border-radius: 99px;
-  transition: width 0.4s, background 0.3s;
+  transition: width 0.6s ease, background 0.3s;
   max-width: 100%;
   position: relative;
 }
-/* Limit marker */
 .gauge-limit-line {
   position: absolute; top: -3px; bottom: -3px; width: 2px;
   background: var(--border); border-radius: 1px;
@@ -213,23 +214,35 @@ body {
 }
 .gauge-used  { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
 .gauge-limit { font-size: 10px; color: var(--text-muted); }
-.gauge-over  { font-size: 9.5px; font-weight: 600; padding: 1px 7px; border-radius: 99px;
-               background: var(--red-dim); color: var(--red); margin-top: 5px; display: inline-block; }
 
 /* ─── Main ──────────────────────────────────────── */
 .main {
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  min-width: 0;
 }
 .header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 26px;
   border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-shrink: 0;
 }
+.header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.hamburger {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: var(--r);
+  color: var(--text-muted);
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+.hamburger:hover { background: var(--surface-2); }
 .header-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
 .header-sub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-.header-actions { display: flex; gap: 8px; }
+.header-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .btn {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 6px 13px;
@@ -238,19 +251,30 @@ body {
   border: 1px solid var(--border);
   background: white; color: var(--text-muted);
   transition: all 0.12s;
+  min-height: 34px;
+  white-space: nowrap;
 }
 .btn:hover { color: var(--text); border-color: var(--accent); }
 .btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
 .btn-primary:hover { filter: brightness(1.08); }
+.btn-icon {
+  width: 34px; height: 34px; padding: 0;
+  justify-content: center;
+  display: none;
+}
 
 /* ─── Kanban ────────────────────────────────────── */
 .kanban-pane {
   overflow-y: auto;
   padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 .section-hd {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 16px;
+  flex-shrink: 0;
 }
 .section-title {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
@@ -261,10 +285,16 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
   align-items: start;
+  flex: 1;
 }
+.kanban-col { min-width: 0; }
 .kanban-col-hd {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 10px;
+  position: sticky; top: 0;
+  background: var(--bg);
+  padding: 4px 0 6px;
+  z-index: 10;
 }
 .col-name {
   font-size: 10.5px; font-weight: 600; text-transform: uppercase;
@@ -275,6 +305,8 @@ body {
   background: var(--surface-2); color: var(--text-muted);
   padding: 1px 7px; border-radius: 99px;
 }
+
+/* Task cards */
 .task-card {
   background: white;
   border: 1px solid var(--border);
@@ -283,12 +315,14 @@ body {
   margin-bottom: 9px;
   cursor: pointer;
   transition: border-color 0.12s, box-shadow 0.12s, transform 0.1s;
+  position: relative;
 }
 .task-card:hover {
   border-color: var(--accent-mid);
   box-shadow: 0 3px 14px var(--accent-glow);
   transform: translateY(-1px);
 }
+.task-card:hover .task-actions { opacity: 1; }
 .task-top { display: flex; align-items: flex-start; gap: 8px; }
 .priority-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 .p-high { background: oklch(62% 0.21 24); }
@@ -310,22 +344,174 @@ body {
 .task-active { border-color: var(--accent) !important; border-left-width: 3px; }
 .task-done   { opacity: 0.42; }
 .task-done .task-title { text-decoration: line-through; }
+
+/* Task action buttons */
+.task-actions {
+  position: absolute; top: 6px; right: 6px;
+  display: flex; gap: 3px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.task-btn {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition: all 0.12s;
+  min-height: unset;
+  padding: 0;
+}
+.task-btn:hover { background: white; color: var(--text); border-color: var(--accent-mid); }
+.task-btn-del:hover { color: var(--red); border-color: var(--red); }
+.task-btn-move:hover { color: var(--accent); border-color: var(--accent); }
+
+/* New task form */
+.new-task-form {
+  background: white;
+  border: 1px solid var(--accent-mid);
+  border-radius: var(--r-lg);
+  padding: 12px 13px;
+  margin-bottom: 9px;
+  box-shadow: 0 3px 14px var(--accent-glow);
+}
+.new-task-form input,
+.new-task-form select {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 12.5px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 6px 9px;
+  background: var(--surface);
+  color: var(--text);
+  margin-bottom: 7px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.new-task-form input:focus,
+.new-task-form select:focus { border-color: var(--accent-mid); }
+.new-task-form-row { display: flex; gap: 6px; }
+.new-task-form-row input,
+.new-task-form-row select { margin-bottom: 0; }
+.new-task-form-actions { display: flex; gap: 6px; margin-top: 8px; }
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 11.5px;
+  min-height: 28px;
+}
+
+/* Empty col state */
+.col-empty {
+  font-size: 11px; color: var(--text-muted);
+  text-align: center; padding: 18px 0;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-lg);
+  opacity: 0.7;
+}
+
+/* ─── Overlay ──────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: oklch(17% 0.005 95 / 0.35);
+  z-index: 90;
+}
+.sidebar-overlay.visible { display: block; }
+
+/* ─── Mobile (≤768px) ───────────────────────────── */
+@media (max-width: 768px) {
+  body { overflow: hidden; }
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 100;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .hamburger { display: flex; }
+
+  .header {
+    padding: 12px 16px;
+  }
+
+  .header-actions .btn:not(.btn-primary) { display: none; }
+  .btn-icon { display: inline-flex; }
+
+  .kanban-pane {
+    padding: 16px;
+    overflow-y: hidden;
+  }
+
+  .kanban {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    flex: 1;
+    height: calc(100vh - 120px);
+    align-items: stretch;
+    padding-bottom: 16px;
+  }
+
+  .kanban-col {
+    min-width: calc(100vw - 48px);
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .kanban-col-hd {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+  }
+
+  .task-actions { opacity: 1; }
+
+  .section-hd { margin-bottom: 12px; }
+}
+
+/* ─── Loading shimmer ───────────────────────────── */
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+.loading { animation: shimmer 1.4s ease-in-out infinite; }
 </style>
 </head>
 <body>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
 <div class="shell">
 
   <!-- ─── Sidebar ─────────────────────────────────── -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
 
     <!-- Brand + status dot -->
     <div class="sidebar-brand">
       <div class="brand-icon">P</div>
       <div class="brand-text">
         <div class="brand-name">Pluto</div>
-        <div class="brand-sub">AI Assistant</div>
+        <div class="brand-sub" id="brand-sub">AI Assistant</div>
+        <div class="brand-sub-offline" id="brand-offline"></div>
       </div>
-      <span class="status-dot" id="status-dot" title="Online"></span>
+      <span class="status-dot" id="status-dot" title="Checking..."></span>
     </div>
 
     <!-- Nav -->
@@ -377,7 +563,10 @@ body {
 
     <!-- Token Stats -->
     <div class="token-section">
-      <span class="token-label">Token Usage</span>
+      <span class="token-label">
+        Token Usage
+        <span class="token-label-refresh" id="refresh-btn" title="Refresh">↺</span>
+      </span>
 
       <!-- Monthly -->
       <div class="token-card">
@@ -385,17 +574,17 @@ body {
           <div class="donut-wrap">
             <svg width="48" height="48" viewBox="0 0 48 48" id="donut-svg"></svg>
             <div class="donut-center-text">
-              <span class="donut-pct" id="donut-pct-text">37%</span>
+              <span class="donut-pct" id="donut-pct-text">—</span>
             </div>
           </div>
           <div class="token-meta">
             <div class="token-card-label">This Month</div>
-            <div class="token-card-val" id="monthly-cost">~$0.89</div>
-            <div class="token-card-sub">est. · 186k of 500k tokens</div>
+            <div class="token-card-val loading" id="monthly-cost">—</div>
+            <div class="token-card-sub" id="monthly-sub">Loading…</div>
           </div>
         </div>
         <div class="health-badge badge-ok" id="monthly-badge">
-          <span class="badge-dot"></span>Healthy — 18 days left
+          <span class="badge-dot"></span><span id="monthly-badge-text">Loading…</span>
         </div>
       </div>
 
@@ -403,15 +592,15 @@ body {
       <div class="gauge-card">
         <div class="gauge-top">
           <span class="gauge-label">Today</span>
-          <span class="gauge-badge" id="daily-badge">↑ 16%</span>
+          <span class="gauge-badge badge-ok" id="daily-badge">—</span>
         </div>
         <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-fill" style="width:49%">
+          <div class="gauge-fill" id="gauge-fill" style="width:0%">
             <div class="gauge-limit-line"></div>
           </div>
         </div>
         <div class="gauge-numbers">
-          <span class="gauge-used" id="gauge-used">24.7k</span>
+          <span class="gauge-used loading" id="gauge-used">—</span>
           <span class="gauge-limit" id="gauge-limit-label">of 50k daily</span>
         </div>
       </div>
@@ -422,155 +611,455 @@ body {
   <!-- ─── Main ─────────────────────────────────────── -->
   <main class="main">
     <header class="header">
-      <div>
-        <div class="header-title">Overview</div>
-        <div class="header-sub">Wed 2026-08-19 · claude-sonnet-4-6</div>
+      <div class="header-left">
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M2 4.5h14M2 9h14M2 13.5h14"/>
+          </svg>
+        </button>
+        <div>
+          <div class="header-title">Overview</div>
+          <div class="header-sub" id="header-sub">Loading…</div>
+        </div>
       </div>
       <div class="header-actions">
-        <button class="btn">⌘ Quick Action</button>
-        <button class="btn btn-primary">+ New Task</button>
+        <button class="btn" id="new-task-btn">+ New Task</button>
+        <button class="btn btn-primary btn-icon" id="new-task-btn-icon" title="New Task" aria-label="New Task">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 2v10M2 7h10"/>
+          </svg>
+        </button>
       </div>
     </header>
 
     <div class="kanban-pane">
       <div class="section-hd">
         <span class="section-title">Task Board</span>
-        <button class="btn" style="font-size:11px;padding:4px 10px">Filter ▾</button>
+        <span class="section-title" id="task-count" style="letter-spacing:0">—</span>
       </div>
-      <div class="kanban">
-
-        <div class="kanban-col">
-          <div class="kanban-col-hd"><span class="col-name">Backlog</span><span class="col-count">3</span></div>
-          <div class="task-card">
-            <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Finalize case study structure</span></div>
-            <div class="task-footer"><span class="task-tag">portfolio</span><span class="task-assignee">P</span></div>
-          </div>
-          <div class="task-card">
-            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Design system audit</span></div>
-            <div class="task-footer"><span class="task-tag">design</span><span class="task-assignee">P</span></div>
-          </div>
-          <div class="task-card">
-            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Write project briefs</span></div>
-            <div class="task-footer"><span class="task-tag">writing</span><span class="task-assignee">P</span></div>
-          </div>
-        </div>
-
-        <div class="kanban-col">
-          <div class="kanban-col-hd"><span class="col-name">In Progress</span><span class="col-count">2</span></div>
-          <div class="task-card task-active">
-            <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Dashboard concept mockups</span></div>
-            <div class="task-footer"><span class="task-tag">pluto</span><span class="task-assignee">P</span></div>
-          </div>
-          <div class="task-card">
-            <div class="task-top"><span class="priority-dot p-med"></span><span class="task-title">Connect Figma API</span></div>
-            <div class="task-footer"><span class="task-tag">dev</span><span class="task-assignee">P</span></div>
-          </div>
-        </div>
-
-        <div class="kanban-col">
-          <div class="kanban-col-hd"><span class="col-name">Review</span><span class="col-count">1</span></div>
-          <div class="task-card">
-            <div class="task-top"><span class="priority-dot p-high"></span><span class="task-title">Agent architecture setup</span></div>
-            <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
-          </div>
-        </div>
-
-        <div class="kanban-col">
-          <div class="kanban-col-hd"><span class="col-name">Done</span><span class="col-count">3</span></div>
-          <div class="task-card task-done">
-            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Bootstrap OpenClaw</span></div>
-            <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
-          </div>
-          <div class="task-card task-done">
-            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Configure integrations</span></div>
-            <div class="task-footer"><span class="task-tag">setup</span><span class="task-assignee">P</span></div>
-          </div>
-          <div class="task-card task-done">
-            <div class="task-top"><span class="priority-dot p-low"></span><span class="task-title">Multi-agent isolation</span></div>
-            <div class="task-footer"><span class="task-tag">agent</span><span class="task-assignee">P</span></div>
-          </div>
-        </div>
-
+      <div class="kanban" id="kanban-board">
+        <!-- Rendered by JS -->
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
       </div>
     </div>
   </main>
 </div>
 
 <script>
-// ─── Health logic ─────────────────────────────────────────
+// ─── Config ─────────────────────────────────────────────
+const API = 'http://192.168.1.130:3100';
+const POLL_INTERVAL = 30000; // 30s
+
+// ─── State ──────────────────────────────────────────────
+let tasks = [];
+let stats = null;
+let isOnline = null;
+let lastSeen = null;
+let newTaskTarget = 'backlog'; // which column gets the new task form
+let addingTask = false;
+const cache = { stats: null, tasks: null, status: null };
+
+// ─── Helpers ────────────────────────────────────────────
+function fmt(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
+}
+function fmtCost(n) {
+  if (n < 0.01) return '<$0.01';
+  return '$' + n.toFixed(2);
+}
+function fmtTime(iso) {
+  if (!iso) return 'unknown';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+function today() {
+  return new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+}
+function healthClass(pct) {
+  if (pct >= 0.85) return 'crit';
+  if (pct >= 0.65) return 'warn';
+  return 'ok';
+}
+function badgeText(pct, ctx) {
+  const daysLeft = 31 - new Date().getDate();
+  if (ctx === 'month') {
+    if (pct >= 0.85) return `⚠ Critical — ${daysLeft}d left`;
+    if (pct >= 0.65) return `↗ Watch it — ${daysLeft}d left`;
+    return `✓ Healthy — ${daysLeft}d left`;
+  }
+  if (pct >= 1.0) return '⚠ Over limit';
+  if (pct >= 0.85) return '⚠ High';
+  if (pct >= 0.65) return '↗ Watch';
+  return '↑ Good';
+}
+
 const COLORS = {
   ok:   'oklch(62% 0.18 145)',
   warn: 'oklch(72% 0.16 74)',
   crit: 'oklch(60% 0.20 24)'
 };
-function healthClass(pct) {
-  if (pct >= 1.0)  return 'crit';
-  if (pct >= 0.85) return 'crit';
-  if (pct >= 0.65) return 'warn';
-  return 'ok';
-}
-function badgeText(pct, daysLeft) {
-  if (pct >= 0.85) return `⚠ Critical — ${daysLeft}d left`;
-  if (pct >= 0.65) return `↗ Watch it — ${daysLeft}d left`;
-  return `✓ Healthy — ${daysLeft}d left`;
-}
 
-// Monthly
-const MONTHLY_LIMIT = 500000;
-const monthlyUsed   = 186000;
-const monthlyPct    = monthlyUsed / MONTHLY_LIMIT;
-const monthlyH      = healthClass(monthlyPct);
-document.getElementById('monthly-badge').className = `health-badge badge-${monthlyH}`;
-document.getElementById('monthly-badge').innerHTML = `<span class="badge-dot"></span>${badgeText(monthlyPct, 18)}`;
-
-// Estimated cost (Sonnet 4.6: $3/MTok input, $15/MTok output, $0.30/MTok cache read, ~96% cache)
-// Rough split: 70% input, 30% output; 96% of input is cached
-const estCost = (
-  monthlyUsed * 0.70 * 0.96 * 0.30 / 1e6 +   // cached input
-  monthlyUsed * 0.70 * 0.04 * 3.00 / 1e6 +   // uncached input
-  monthlyUsed * 0.30 * 15.0 / 1e6            // output
-);
-document.getElementById('monthly-cost').textContent = `~$${estCost.toFixed(2)} est.`;
-
-// Daily linear gauge
-const DAILY_LIMIT = 50000;
-const dailyUsed   = 24700;
-const dailyPct    = dailyUsed / DAILY_LIMIT;
-const dailyH      = healthClass(dailyPct);
-const gaugeFill = document.getElementById('gauge-fill');
-gaugeFill.style.width = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
-gaugeFill.style.background = COLORS[dailyH];
-
-const dailyBadge = document.getElementById('daily-badge');
-dailyBadge.className = `gauge-badge badge-${dailyH}`;
-dailyBadge.textContent = dailyPct >= 1 ? '⚠ Over limit' : dailyPct >= 0.85 ? '⚠ High' : dailyPct >= 0.65 ? '↗ Watch' : '↑ 16%';
-
-if (dailyPct >= 1) {
-  const nums = document.getElementById('gauge-used').parentElement;
-  const over = document.createElement('div');
-  over.className = 'gauge-over';
-  over.textContent = `${((dailyPct - 1) * DAILY_LIMIT / 1000).toFixed(1)}k over limit`;
-  nums.parentElement.appendChild(over);
+// ─── Status dot ─────────────────────────────────────────
+function updateStatus(online, ts) {
+  const dot = document.getElementById('status-dot');
+  const sub = document.getElementById('brand-sub');
+  const offlineEl = document.getElementById('brand-offline');
+  if (online) {
+    dot.classList.remove('offline');
+    dot.title = 'Online';
+    sub.style.display = '';
+    offlineEl.style.display = 'none';
+  } else {
+    dot.classList.add('offline');
+    dot.title = 'Offline';
+    sub.style.display = 'none';
+    offlineEl.style.display = '';
+    offlineEl.textContent = ts ? `Last seen ${fmtTime(ts)}` : 'Offline';
+  }
 }
 
-// ─── Donut ring ───────────────────────────────────────────
-(function() {
-  const svg  = document.getElementById('donut-svg');
+// ─── Token stats ────────────────────────────────────────
+function renderStats(s) {
+  if (!s) return;
+  const monthlyPct = s.monthlyPct || 0;
+  const dailyPct = s.dailyPct || 0;
+  const mH = healthClass(monthlyPct);
+  const dH = healthClass(dailyPct);
+
+  // Cost
+  const costEl = document.getElementById('monthly-cost');
+  costEl.classList.remove('loading');
+  costEl.textContent = fmtCost(s.estCostMonth) + ' est.';
+
+  // Sub line
+  document.getElementById('monthly-sub').textContent =
+    `${fmt(s.tokensMonth)} of ${fmt(s.monthlyLimit)} tokens`;
+
+  // Monthly badge
+  const badge = document.getElementById('monthly-badge');
+  badge.className = `health-badge badge-${mH}`;
+  document.getElementById('monthly-badge-text').textContent = badgeText(monthlyPct, 'month');
+
+  // Donut
+  drawDonut(monthlyPct, mH);
+
+  // Daily gauge
+  const gaugeUsed = document.getElementById('gauge-used');
+  gaugeUsed.classList.remove('loading');
+  gaugeUsed.textContent = fmt(s.tokensToday);
+
+  document.getElementById('gauge-limit-label').textContent = `of ${fmt(s.dailyLimit)} daily`;
+
+  const fill = document.getElementById('gauge-fill');
+  fill.style.width = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
+  fill.style.background = COLORS[dH];
+
+  const db = document.getElementById('daily-badge');
+  db.className = `gauge-badge badge-${dH}`;
+  db.textContent = badgeText(dailyPct, 'day');
+}
+
+function drawDonut(pct, hClass) {
+  const svg = document.getElementById('donut-svg');
   const cx = 24, cy = 24, r = 18, sw = 5;
   const circ = 2 * Math.PI * r;
-  const used = circ * monthlyPct;
-  const stroke = COLORS[monthlyH];
-  const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+  const used = circ * Math.min(pct, 1);
+  const stroke = COLORS[hClass];
   svg.innerHTML = `
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${border}" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="oklch(87% 0.012 95)" stroke-width="${sw}"/>
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${stroke}" stroke-width="${sw}"
       stroke-dasharray="${used.toFixed(2)} ${circ.toFixed(2)}"
       stroke-dashoffset="${(circ * 0.25).toFixed(2)}"
       stroke-linecap="round"/>
   `;
-  document.getElementById('donut-pct-text').textContent = Math.round(monthlyPct * 100) + '%';
-  document.getElementById('donut-pct-text').style.color = stroke;
-})();
+  const pctEl = document.getElementById('donut-pct-text');
+  pctEl.textContent = Math.round(pct * 100) + '%';
+  pctEl.style.color = stroke;
+}
+
+// ─── Task board ──────────────────────────────────────────
+const COLS = [
+  { id: 'backlog',     label: 'Backlog' },
+  { id: 'in-progress', label: 'In Progress' },
+  { id: 'review',      label: 'Review' },
+  { id: 'done',        label: 'Done' }
+];
+const NEXT_COL = { 'backlog': 'in-progress', 'in-progress': 'review', 'review': 'done', 'done': null };
+
+function renderBoard() {
+  const board = document.getElementById('kanban-board');
+  const total = tasks.length;
+  document.getElementById('task-count').textContent = `${total} task${total !== 1 ? 's' : ''}`;
+
+  board.innerHTML = '';
+  for (const col of COLS) {
+    const colTasks = tasks.filter(t => t.status === col.id);
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.dataset.col = col.id;
+
+    // Header
+    const hd = document.createElement('div');
+    hd.className = 'kanban-col-hd';
+    hd.innerHTML = `<span class="col-name">${col.label}</span><span class="col-count">${colTasks.length}</span>`;
+    colEl.appendChild(hd);
+
+    // New task form (if this is target col and we're adding)
+    if (addingTask && newTaskTarget === col.id) {
+      colEl.appendChild(buildNewTaskForm(col.id));
+    }
+
+    // Tasks
+    for (const task of colTasks) {
+      colEl.appendChild(buildTaskCard(task));
+    }
+
+    // Empty state
+    if (colTasks.length === 0 && !(addingTask && newTaskTarget === col.id)) {
+      const empty = document.createElement('div');
+      empty.className = 'col-empty';
+      empty.textContent = 'Empty';
+      colEl.appendChild(empty);
+    }
+
+    board.appendChild(colEl);
+  }
+}
+
+function buildTaskCard(task) {
+  const div = document.createElement('div');
+  const isDone = task.status === 'done';
+  div.className = 'task-card' +
+    (task.status === 'in-progress' ? ' task-active' : '') +
+    (isDone ? ' task-done' : '');
+  div.dataset.id = task.id;
+
+  const pClass = { high: 'p-high', med: 'p-med', low: 'p-low' }[task.priority] || 'p-low';
+  const nextCol = NEXT_COL[task.status];
+
+  div.innerHTML = `
+    <div class="task-actions">
+      ${nextCol ? `<button class="task-btn task-btn-move" title="Move to ${nextCol}" data-id="${task.id}" data-next="${nextCol}">→</button>` : ''}
+      <button class="task-btn task-btn-del" title="Delete" data-id="${task.id}">×</button>
+    </div>
+    <div class="task-top">
+      <span class="priority-dot ${pClass}"></span>
+      <span class="task-title">${escHtml(task.title)}</span>
+    </div>
+    <div class="task-footer">
+      <span class="task-tag">${escHtml(task.tag || '')}</span>
+      <span class="task-assignee">${escHtml(task.assignee || 'P')}</span>
+    </div>
+  `;
+
+  // Move button
+  const moveBtn = div.querySelector('.task-btn-move');
+  if (moveBtn) {
+    moveBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      moveTask(task.id, nextCol);
+    });
+  }
+
+  // Delete button
+  const delBtn = div.querySelector('.task-btn-del');
+  delBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    deleteTask(task.id);
+  });
+
+  return div;
+}
+
+function buildNewTaskForm(colId) {
+  const form = document.createElement('div');
+  form.className = 'new-task-form';
+  form.innerHTML = `
+    <input type="text" id="new-task-title" placeholder="Task title…" autocomplete="off" maxlength="120">
+    <div class="new-task-form-row">
+      <select id="new-task-priority">
+        <option value="low">Low</option>
+        <option value="med" selected>Med</option>
+        <option value="high">High</option>
+      </select>
+      <input type="text" id="new-task-tag" placeholder="tag" maxlength="30">
+    </div>
+    <div class="new-task-form-actions">
+      <button class="btn btn-primary btn-sm" id="new-task-submit">Add</button>
+      <button class="btn btn-sm" id="new-task-cancel">Cancel</button>
+    </div>
+  `;
+
+  form.querySelector('#new-task-submit').addEventListener('click', () => submitNewTask(colId));
+  form.querySelector('#new-task-cancel').addEventListener('click', cancelNewTask);
+  form.querySelector('#new-task-title').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitNewTask(colId);
+    if (e.key === 'Escape') cancelNewTask();
+  });
+
+  setTimeout(() => form.querySelector('#new-task-title')?.focus(), 50);
+  return form;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Task CRUD ───────────────────────────────────────────
+async function moveTask(id, newStatus) {
+  // Optimistic
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  task.status = newStatus;
+  renderBoard();
+
+  try {
+    await fetch(`${API}/api/tasks/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+  } catch {
+    // Revert on failure
+    fetchTasks();
+  }
+}
+
+async function deleteTask(id) {
+  // Optimistic
+  tasks = tasks.filter(t => t.id !== id);
+  renderBoard();
+
+  try {
+    await fetch(`${API}/api/tasks/${id}`, { method: 'DELETE' });
+  } catch {
+    fetchTasks();
+  }
+}
+
+async function submitNewTask(colId) {
+  const title = document.getElementById('new-task-title')?.value?.trim();
+  if (!title) return;
+  const priority = document.getElementById('new-task-priority')?.value || 'med';
+  const tag = document.getElementById('new-task-tag')?.value?.trim() || '';
+
+  const newTask = {
+    id: 'tmp-' + Date.now(),
+    title, status: colId, priority, tag, assignee: 'P'
+  };
+
+  // Optimistic
+  tasks.push(newTask);
+  addingTask = false;
+  renderBoard();
+
+  try {
+    const res = await fetch(`${API}/api/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, status: colId, priority, tag })
+    });
+    const created = await res.json();
+    // Replace temp with real
+    const idx = tasks.findIndex(t => t.id === newTask.id);
+    if (idx !== -1) tasks[idx] = created;
+    renderBoard();
+  } catch {
+    fetchTasks();
+  }
+}
+
+function cancelNewTask() {
+  addingTask = false;
+  renderBoard();
+}
+
+function openNewTaskForm(colId = 'backlog') {
+  newTaskTarget = colId;
+  addingTask = true;
+  renderBoard();
+  // Scroll kanban pane to show backlog on mobile
+  const board = document.getElementById('kanban-board');
+  const col = board.querySelector(`[data-col="${colId}"]`);
+  if (col) col.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+}
+
+// ─── Fetching ────────────────────────────────────────────
+async function fetchStatus() {
+  try {
+    const res = await fetch(`${API}/api/status`, { signal: AbortSignal.timeout(5000) });
+    const data = await res.json();
+    isOnline = true;
+    lastSeen = data.lastSeen;
+    cache.status = data;
+    updateStatus(true, data.lastSeen);
+  } catch {
+    isOnline = false;
+    updateStatus(false, lastSeen);
+  }
+}
+
+async function fetchStats() {
+  try {
+    const res = await fetch(`${API}/api/stats`, { signal: AbortSignal.timeout(8000) });
+    const data = await res.json();
+    cache.stats = data;
+    renderStats(data);
+  } catch {
+    if (cache.stats) renderStats(cache.stats); // show cached
+  }
+}
+
+async function fetchTasks() {
+  try {
+    const res = await fetch(`${API}/api/tasks`, { signal: AbortSignal.timeout(5000) });
+    const data = await res.json();
+    tasks = data;
+    cache.tasks = data;
+    renderBoard();
+  } catch {
+    if (cache.tasks) { tasks = cache.tasks; renderBoard(); }
+    // else board stays as-is (loading placeholders)
+  }
+}
+
+async function refreshAll() {
+  await Promise.allSettled([fetchStatus(), fetchStats(), fetchTasks()]);
+  // Update header subtitle
+  const now = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  document.getElementById('header-sub').textContent =
+    `${now} · claude-sonnet-4-6${isOnline ? '' : ' · offline'}`;
+}
+
+// ─── Sidebar (mobile) ────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+
+document.getElementById('hamburger').addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('visible');
+});
+
+// ─── New Task buttons ────────────────────────────────────
+document.getElementById('new-task-btn').addEventListener('click', () => openNewTaskForm('backlog'));
+document.getElementById('new-task-btn-icon').addEventListener('click', () => openNewTaskForm('backlog'));
+document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+// ─── Init ────────────────────────────────────────────────
+refreshAll();
+setInterval(refreshAll, POLL_INTERVAL);
+
+// Init donut placeholder
+drawDonut(0, 'ok');
 </script>
 </body>
 </html>
